@@ -1,0 +1,1399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PharmaWebcast — Full Preview</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%232d7a2d'/><text x='16' y='22' text-anchor='middle' font-size='18' font-family='Arial' font-weight='bold' fill='white'>P</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="/vendor/bootstrap-icons/bootstrap-icons.min.css">
+<style>
+/* ── global ── */
+*{box-sizing:border-box;}
+html,body{margin:0;overflow-x:hidden;max-width:100%;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f1f5f9;}
+img{max-width:100%;}
+.page{display:none;min-height:100vh;}
+.page.active{display:flex;flex-direction:column;}
+
+/* ── nav bar ── */
+#nav-bar{position:fixed;bottom:0;left:0;right:0;z-index:9999;
+  background:rgba(15,23,42,.92);backdrop-filter:blur(10px);
+  border-top:1px solid #334155;display:flex;gap:0;overflow-x:auto;}
+#nav-bar button{flex:1;min-width:100px;padding:.6rem .4rem;border:none;
+  background:transparent;color:#94a3b8;font-size:.72rem;font-weight:600;
+  text-transform:uppercase;letter-spacing:.05em;cursor:pointer;transition:all .2s;
+  border-top:2px solid transparent;}
+#nav-bar button:hover{color:#e2e8f0;background:rgba(255,255,255,.04);}
+#nav-bar button.active{color:#60a5fa;border-top-color:#3b82f6;background:rgba(59,130,246,.08);}
+#nav-bar .sep{width:1px;background:#334155;margin:.4rem 0;flex-shrink:0;}
+
+/* ── page paddings ── */
+.page-content{flex:1;padding-bottom:70px;}
+
+/* ======================================================
+   PAGE 1 — LOGIN / JOIN
+====================================================== */
+#page-login{
+  background-image:url('/assets/images/bg-desktop-new.png');
+  background-size:cover;background-position:center top;background-repeat:no-repeat;
+  min-height:100vh;
+  padding:2rem 4rem 2rem;position:relative;
+}
+#page-login.active{display:flex;}
+.login-nature-left{
+  position:absolute;bottom:clamp(2vh,3vh,5vh);left:clamp(1.5rem,4vw,4rem);z-index:1;
+  background:#fff;border-radius:11px;
+  padding:clamp(1rem,1.8vh,1.8vh) clamp(1.1rem,1.6vw,1.6rem);
+  width:100%;max-width:clamp(280px,22vw,360px);
+  box-shadow:0 8px 40px rgba(0,0,0,.35);
+}
+.login-logos,.login-logo-main,.login-logo-badge{display:none;}
+.login-card-title{font-size:1.1rem;font-weight:800;color:#1a1a1a;margin-bottom:.4vh;}
+.login-card-sub{font-size:.72rem;color:#666;margin-bottom:1vh;}
+.login-field{margin-bottom:clamp(.6rem,1vh,1rem);}
+.login-field input{
+  width:100%;background:#f7f7f7;border:1.5px solid #e0e0e0;border-radius:7px;
+  color:#111;font-size:clamp(.76rem,.8vw,.88rem);padding:clamp(.55rem,.9vh,.85rem) clamp(.6rem,.8vw,.9rem);
+  outline:none;font-weight:500;
+  transition:border .2s;
+}
+.login-field input::placeholder{color:#aaa;font-size:.78rem;}
+.login-field input:focus{border-color:#1a6b1a;background:#fff;}
+.btn-nature-login{
+  margin-top:clamp(.4rem,.6vh,.7rem);width:100%;background:#1a6b1a;border:none;color:#fff;
+  font-weight:800;font-size:clamp(.78rem,.85vw,.92rem);letter-spacing:.05em;
+  padding:clamp(.6rem,1vh,.95rem) .8rem;border-radius:7px;cursor:pointer;
+  box-shadow:0 4px 12px rgba(26,107,26,.3);transition:background .2s;
+}
+.btn-nature-login:hover{background:#155715;}
+.login-switch{margin-top:1rem;font-size:.82rem;color:#555;text-align:center;}
+.login-switch a{color:#1a6b1a;font-weight:700;text-decoration:none;cursor:pointer;}
+.login-switch a:hover{text-decoration:underline;}
+.login-footer a{color:#1a6b1a;font-weight:600;text-decoration:none;}
+
+/* ======================================================
+   PAGE 3 — WEBCAST ROOM (matches coact.live reference)
+====================================================== */
+.wc-wrap{display:flex;flex-direction:column;height:100vh;}
+/* top bar — user identity + logout only */
+.wc-topbar{display:flex;align-items:stretch;justify-content:flex-end;flex-shrink:0;height:42px;
+  background:transparent;position:absolute;top:0;left:0;right:0;z-index:6;padding-right:6rem;}
+.wc-topbar-right{display:flex;align-items:center;
+  padding:0 1rem;gap:.75rem;white-space:nowrap;}
+.live-badge{background:#000;color:#fff;font-size:.65rem;font-weight:800;
+  letter-spacing:.1em;padding:.2rem .55rem;border-radius:3px;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.7}}
+.wc-title{font-size:.88rem;font-weight:700;color:#000;margin:0;}
+.wc-user-name{color:#fff;font-size:.85rem;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.7);}
+.wc-feedback-btn{background:transparent;border:1px solid #999;color:#333;font-weight:600;
+  font-size:.8rem;padding:.3rem .8rem;border-radius:4px;cursor:pointer;}
+.wc-feedback-btn:hover{background:#f0f0f0;}
+.wc-logout-btn{background:#000;border:none;color:#fff;font-weight:700;
+  font-size:.8rem;padding:.3rem .8rem;border-radius:4px;cursor:pointer;}
+/* body — 3 columns: Selfie Booth | Video | Q&A — shared background across all 3 */
+.wc-body{display:flex;flex:1;min-height:0;position:relative;
+  background-image:url('/assets/images/web-cast.png');
+  background-size:cover;background-position:center top;background-repeat:no-repeat;}
+/* RIGHT — Selfie Booth (top) + Q&A (bottom) */
+.wc-panel{width:200px;min-width:180px;flex-shrink:0;margin-right:0.5rem;padding-bottom:2rem;
+  display:flex;flex-direction:column;justify-content:flex-end;
+  background:transparent;border-left:1px solid rgba(255,255,255,.25);}
+/* Selfie Booth — top, shorter height */
+.wc-photobooth{flex:0 0 35%;min-height:0;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:1rem;
+  border-bottom:1px solid rgba(255,255,255,.25);
+  border-right:none;
+  box-sizing: border-box;}
+/* Q&A section — bottom, same shorter height as selfie booth */
+.wc-qa-section{flex:0 0 35%;min-height:0;display:flex;flex-direction:column;overflow:hidden;padding:1rem;box-sizing: border-box;}
+.pb-card-wrapper{width:100%;height:100%;background:#fff;border-radius:12px;padding:0.75rem;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:transform .15s;box-sizing:border-box;}
+.pb-card-wrapper:hover{transform:scale(1.03);}
+.pb-badge-img{width:100%;max-width:140px;transition:transform .15s;}
+
+/* ── SELFIE BOOTH PAGE ── */
+#page-selfiebooth{
+  background-image:url('/assets/images/selfiebooth.png');
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+.sb-topbar{display:flex;align-items:center;gap:1rem;height:42px;flex-shrink:0;
+  background:transparent;border-bottom:none;padding:0 1rem;}
+.sb-back-btn{background:#000;border:none;color:#fff;font-weight:700;font-size:.8rem;
+  padding:.35rem .9rem;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:.4rem;}
+.sb-back-btn:hover{background:#333;}
+.sb-title{font-size:.9rem;font-weight:700;color:#fff;margin:0;}
+.sb-body{flex:1;display:flex;align-items:center;justify-content:center;padding:2rem;}
+.sb-card{width:100%;max-width:480px;background:#fff;border-radius:12px;overflow:hidden;
+  box-shadow:0 8px 40px rgba(0,0,0,.4);}
+.pb-cam-wrap{aspect-ratio:1/1;min-height:180px;background:#111;position:relative;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.pb-cam-wrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+.pb-cam-wrap img{width:100%;height:100%;object-fit:cover;}
+.pb-placeholder{display:none;flex-direction:column;align-items:center;gap:.5rem;
+  color:#777;text-align:center;padding:1rem;}
+.pb-placeholder i{font-size:2.2rem;color:#666;}
+.pb-placeholder p{font-size:.78rem;margin:0;color:#888;}
+.pb-actions{padding:1rem;flex-shrink:0;display:flex;flex-direction:column;gap:.6rem;}
+.pb-btn{width:100%;border-radius:6px;padding:.7rem;font-size:.9rem;font-weight:700;cursor:pointer;}
+.pb-btn-primary{background:#000;border:1px solid #000;color:#fff;}
+.pb-btn-primary:hover{background:#333;}
+.pb-btn-secondary{background:#fff;border:1px solid #999;color:#333;}
+.pb-btn-secondary:hover{background:#f0f0f0;}
+
+/* MIDDLE — video, contained within available space (background shared with .wc-body) */
+.wc-left{flex:1;min-width:0;position:relative;overflow:hidden;
+  display:flex;align-items:flex-end;justify-content:flex-start;padding:1.25rem;}
+/* actual video box — bigger size, but positioned to avoid background text */
+.wc-video-box{
+  width:min(88%, 950px);aspect-ratio:16/9;background:#000;
+  border-radius:8px;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,.4);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;}
+.wc-left-footer{display:none;}
+.wc-player-placeholder{text-align:center;color:#888;}
+.wc-player-placeholder i{font-size:4rem;display:block;margin-bottom:.4rem;color:#888;}
+.wc-player-placeholder p{font-size:.82rem;margin:0;color:#999;}
+
+.wc-section-hdr{padding:.6rem .9rem;font-size:.9rem;font-weight:700;color:#fff;flex-shrink:0;
+  text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.wc-qa-input-area{flex:1;display:flex;flex-direction:column;padding:0;}
+.qa-textarea{flex:1;width:100%;background:#fff;border:1px solid #ccc;border-radius:4px;
+  color:#000;padding:.75rem;font-size:.85rem;resize:none;outline:none;min-height:0;}
+.qa-textarea:focus{border-color:#000;}
+.qa-send{margin-top:.5rem;width:100%;background:#000;border:1px solid #000;color:#fff;
+  border-radius:4px;padding:.6rem;font-size:.88rem;font-weight:700;cursor:pointer;}
+.qa-send:hover{background:#333;}
+/* Poll bars — still used by the admin dashboard Polls tab */
+.poll-bar-row{margin-bottom:.7rem;}
+.poll-bar-label{display:flex;justify-content:space-between;font-size:.82rem;
+  margin-bottom:.25rem;color:#fff;font-weight:600;text-shadow:0 1px 4px rgba(0,0,0,.6);}
+.poll-bar-track{background:rgba(255,255,255,.3);border-radius:2px;height:12px;overflow:hidden;}
+.poll-bar-fill{height:100%;border-radius:2px;background:#000;transition:width .7s ease;}
+
+/* Quiz/Survey — modal-style overlay trigger from topbar */
+.wc-extra-btn{background:#1a1a2e;border:1px solid #e05c00;color:#f0a070;
+  font-size:.75rem;font-weight:600;border-radius:5px;padding:.28rem .7rem;cursor:pointer;}
+.wc-extra-btn:hover{background:#e05c00;color:#fff;}
+/* quiz inline card (shown inside right panel as overlay) */
+.quiz-overlay{display:none;position:absolute;top:0;left:0;right:0;bottom:0;
+  background:rgba(0,0,0,.85);z-index:10;align-items:center;justify-content:center;}
+.quiz-overlay.show{display:flex;}
+.quiz-box{background:#fff;border-radius:12px;padding:1.5rem;max-width:400px;width:90%;}
+.quiz-box h4{font-size:1rem;font-weight:800;color:#1a1a2e;margin:0 0 .5rem;}
+.quiz-box p{font-size:.83rem;color:#555;margin:0 0 1rem;}
+.quiz-opt{display:flex;align-items:center;gap:.6rem;border:1.5px solid #ddd;
+  border-radius:6px;padding:.5rem .75rem;margin-bottom:.4rem;cursor:pointer;}
+.quiz-opt:hover{border-color:#e05c00;background:#fff5f0;}
+.quiz-opt input{accent-color:#e05c00;}
+.quiz-opt label{font-size:.85rem;color:#333;cursor:pointer;margin:0;}
+.quiz-submit{width:100%;margin-top:.75rem;background:#1a1a2e;border:none;color:#fff;
+  border-radius:6px;padding:.6rem;font-weight:700;cursor:pointer;font-size:.88rem;}
+.quiz-close{float:right;background:none;border:none;font-size:1.2rem;
+  color:#aaa;cursor:pointer;margin-top:-.25rem;}
+
+/* Survey pane */
+.survey-q{margin-bottom:1rem;}
+.survey-q label{display:block;font-size:.82rem;font-weight:600;color:#333;margin-bottom:.35rem;}
+.survey-q .star-row{display:flex;gap:.3rem;}
+.star-btn{background:none;border:none;font-size:1.4rem;color:#ddd;cursor:pointer;transition:.1s;}
+.star-btn:hover,.star-btn.on{color:#f59e0b;}
+.survey-ta{width:100%;background:#fff;border:1.5px solid #ccc;border-radius:6px;
+  color:#222;padding:.55rem .7rem;font-size:.83rem;resize:none;outline:none;min-height:70px;}
+.survey-submit{width:100%;background:#2ecc40;border:none;color:#fff;border-radius:6px;
+  padding:.6rem;font-weight:700;cursor:pointer;font-size:.88rem;margin-top:.5rem;}
+
+/* ======================================================
+   PAGE 4 — ADMIN LOGIN  (hidden, plain dark)
+====================================================== */
+#page-admin-login{background:#1a1a1a;}
+.admin-login-card{background:#fff;border-radius:8px;
+  box-shadow:0 4px 24px rgba(0,0,0,.3);padding:2.5rem 2rem;width:100%;max-width:380px;margin:1rem;}
+.admin-login-logo{text-align:center;margin-bottom:1.8rem;}
+.admin-login-logo h1{color:#1a1a1a;font-size:1.2rem;font-weight:800;margin:0 0 .2rem;}
+.admin-login-logo p{color:#666;font-size:.8rem;margin:0;}
+.adm-field label{display:block;font-size:.85rem;font-weight:600;color:#333;margin-bottom:.35rem;}
+.adm-field input{width:100%;background:#f5f5f5;border:1.5px solid #ddd;
+  border-radius:6px;padding:.65rem .9rem;color:#222;font-size:.92rem;outline:none;}
+.adm-field input:focus{border-color:#2a7a2a;}
+.adm-field{margin-bottom:1rem;}
+.btn-admin-login{width:100%;background:#2a7a2a;border:none;color:#fff;font-weight:700;
+  border-radius:6px;padding:.75rem;font-size:.95rem;cursor:pointer;margin-top:.5rem;}
+.btn-admin-login:hover{background:#1d5c1d;}
+.admin-security-note{text-align:center;margin-top:1rem;font-size:.73rem;color:#999;
+  display:flex;align-items:center;justify-content:center;gap:.4rem;}
+
+/* ======================================================
+   PAGE 5 — ADMIN DASHBOARD  (matches GBS reference)
+====================================================== */
+.adm-wrap{display:flex;flex-direction:column;height:100vh;background:#f0f0e8;}
+/* green header bar */
+.adm-green-header{background:#2d7a2d;padding:.7rem 1.5rem;
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.adm-gbs-logo{display:flex;align-items:center;gap:.5rem;}
+.adm-gbs-text{font-size:1.4rem;font-weight:900;color:#fff;letter-spacing:-.02em;}
+.adm-gbs-text .logo-star-r{color:#e05c00;}
+.adm-gbs-text .logo-star-g{color:#2ecc40;}
+.adm-gbs-text .logo-star-b{color:#3b82f6;}
+.adm-gbs-sub{font-size:.65rem;color:rgba(255,255,255,.7);margin-top:.1rem;}
+.adm-circle-badge{width:48px;height:48px;border-radius:50%;border:2px solid rgba(255,255,255,.6);
+  background:rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;
+  font-size:.55rem;font-weight:800;color:#fff;text-align:center;line-height:1.2;letter-spacing:.03em;}
+/* sub-nav */
+.adm-subnav{background:#fff;border-bottom:1px solid #ccc;padding:.5rem 1.5rem;
+  display:flex;align-items:center;gap:.25rem;flex-shrink:0;}
+.adm-subnav a{color:#2a7a2a;font-weight:600;font-size:.9rem;text-decoration:none;padding:0 .1rem;}
+.adm-subnav a:hover{text-decoration:underline;}
+.adm-subnav .sep{color:#999;margin:0 .3rem;}
+/* content */
+.adm-page-content{flex:1;overflow-y:auto;padding:1rem 1.5rem;background:#f0f0e8;}
+.adm-section{display:none;}
+.adm-section.active{display:block;}
+/* toolbar row */
+.adm-toolbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;}
+.adm-toolbar-left{display:flex;align-items:center;gap:1.5rem;font-size:.88rem;color:#333;}
+.adm-toolbar-left strong{color:#222;}
+.adm-excel-btn{background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center;gap:.4rem;color:#2a7a2a;font-size:.82rem;}
+/* users table */
+.adm-table{width:100%;border-collapse:collapse;background:#fff;font-size:.88rem;}
+.adm-table th{padding:.6rem 1rem;text-align:left;color:#222;font-weight:700;
+  border-bottom:2px solid #ccc;background:#e8e8d8;}
+.adm-table td{padding:.55rem 1rem;color:#333;border-bottom:1px solid #e0e0d0;}
+.adm-table tr:nth-child(even) td{background:#f5f5eb;}
+.adm-table tr:hover td{background:#eaeadc;}
+/* keep legacy classes working */
+.adm-nav-link{display:none;}
+.adm-sidebar{display:none;}
+.adm-main{flex:1;overflow-y:auto;}
+.adm-topbar{display:none;}
+.adm-card{background:#fff;border:1px solid #ddd;border-radius:4px;overflow:hidden;margin-bottom:1rem;}
+.adm-card-hdr{padding:.7rem 1rem;border-bottom:1px solid #ddd;background:#e8e8d8;
+  display:flex;align-items:center;justify-content:space-between;}
+.adm-card-hdr h3{font-size:.9rem;font-weight:700;color:#222;margin:0;}
+.adm-card-hdr a{font-size:.78rem;color:#2a7a2a;text-decoration:none;}
+.stat-grid{display:none;}
+.badge-approved{background:#d4edda;color:#1d5c1d;padding:.2rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;}
+.badge-pending{background:#fff3cd;color:#856404;padding:.2rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;}
+.badge-rejected{background:#f8d7da;color:#721c24;padding:.2rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;}
+.badge-live{background:rgba(239,68,68,.12);color:#f87171;padding:.2rem .55rem;border-radius:4px;font-size:.72rem;font-weight:600;}
+
+/* report download btn */
+.btn-dl{background:#1d4ed8;border:none;color:#fff;border-radius:6px;
+  padding:.3rem .7rem;font-size:.75rem;cursor:pointer;display:inline-flex;align-items:center;gap:.3rem;}
+.btn-dl:hover{background:#1e40af;}
+.btn-sm-action{background:transparent;border:1px solid #334155;color:#94a3b8;border-radius:6px;
+  padding:.28rem .6rem;font-size:.72rem;cursor:pointer;}
+.btn-sm-action:hover{border-color:#60a5fa;color:#60a5fa;}
+
+/* attendance live indicator */
+.live-dot{width:8px;height:8px;background:#ef4444;border-radius:50%;
+  animation:pulse 1.5s infinite;display:inline-block;margin-right:4px;}
+
+/* chart placeholder */
+.chart-ph{background:rgba(15,23,42,.5);border-radius:8px;height:200px;
+  display:flex;align-items:center;justify-content:center;color:#334155;
+  font-size:.8rem;flex-direction:column;gap:.5rem;}
+.chart-ph i{font-size:2rem;}
+.charts-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.25rem;}
+
+/* ── transitions ── */
+.page{animation:fadeIn .2s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* ══════════════════════════════════════════
+   MOBILE / PORTRAIT-TABLET RESPONSIVE
+   Phones (≤768px) AND tablets held in portrait
+   (≤1024px width, taller than wide) both get the
+   stacked layout + portrait background image —
+   a landscape desktop image on a tall narrow
+   screen crops badly, so orientation matters more
+   than raw width here.
+══════════════════════════════════════════ */
+@media (max-width: 768px), (max-width: 1024px) and (orientation: portrait) {
+
+  /* Nav bar — smaller text, scrollable */
+  #nav-bar button{font-size:.6rem;padding:.5rem .25rem;min-width:70px;}
+
+  /* Register / Login — mobile poster image, fully visible (never cropped) */
+  #page-login{
+    background-image:url('/assets/images/bg-mobile-new.png') !important;
+    background-size:contain !important;
+    background-position:top center !important;
+    background-color:#132a6b;
+    align-items:center !important;
+    justify-content:flex-end !important;
+    padding:1.5rem 1rem 0.6rem !important;
+  }
+  .login-nature-left{
+    position:static !important;
+    max-width:310px !important;
+    width:100% !important;
+    padding:.65rem .9rem !important;
+    margin-bottom:0;
+  }
+  .login-field{margin-bottom:.4rem !important;}
+  .login-field input{
+    font-size:.72rem !important;
+    padding:.4rem .6rem !important;
+  }
+  .btn-nature-login{
+    margin-top:.25rem !important;
+    font-size:.74rem !important;
+    padding:.45rem !important;
+  }
+
+  /* Webcast — stack: video, then photo booth, then Q&A/poll */
+  .wc-wrap{height:auto;min-height:100vh;}
+  .wc-topbar{height:auto;padding:.4rem .6rem;}
+  .wc-topbar-right{width:100%;padding:.3rem 0;justify-content:flex-end;}
+  .wc-body{
+    display:flex;flex-direction:column;
+    background-image:url('/assets/images/web-cast-mobile.png') !important;
+    background-size:cover !important;
+    background-position:center top !important;
+    background-color:#132a6b;
+    background-repeat:no-repeat !important;
+    padding-top:1rem;
+  }
+  .wc-left{order:-1;height:min(38vh, 420px);padding:1rem;align-items:center;justify-content:center;}
+  .wc-video-box{width:90%;height:auto;border-radius:0;box-shadow:none;}
+  .wc-panel{width:100%;max-width:100%;border-left:none;border-top:1px solid rgba(255,255,255,.25);}
+  .wc-photobooth{padding:.8rem;border-bottom:1px solid rgba(255,255,255,.25);border-right:none;}
+  .pb-badge-img{width:150px;}
+
+  /* Admin dashboard — scrollable table */
+  .adm-green-header{flex-wrap:wrap;gap:.5rem;padding:.6rem 1rem;}
+  .adm-subnav{padding:.4rem 1rem;font-size:.82rem;flex-wrap:wrap;}
+  .adm-page-content{padding:.75rem 1rem;}
+  .adm-table{font-size:.78rem;}
+  .adm-table th,.adm-table td{padding:.4rem .6rem;}
+  .adm-section{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+
+  /* Feedback modal */
+  .feedback-modal-box{width:95% !important;margin:0 auto;}
+
+  /* Selfie booth page */
+  #page-selfiebooth{
+    background-image:url('/assets/images/selfiebooth mobile version.png') !important;
+  }
+  .sb-body{padding:1rem;}
+  .sb-card{max-width:100%;}
+}
+
+/* ══════════════════════════════════════════
+   TABLET-LANDSCAPE RESPONSIVE  (769px – 1024px, wide)
+   Only landscape tablets keep the desktop-style
+   background + absolute-positioned login card;
+   the 3-column webcast layout still needs shrinking
+   to avoid a cramped middle video.
+══════════════════════════════════════════ */
+@media (min-width: 769px) and (max-width: 1024px) and (orientation: landscape) {
+  .wc-panel{width:220px;min-width:200px;}
+  .wc-qa-section{padding:.75rem;}
+  .wc-photobooth{padding:.75rem;}
+  .wc-video-box{width:min(100%, 620px);}
+
+  .login-nature-left{max-width:320px;left:2.5rem;}
+  #page-login{padding:2rem 2.5rem 2rem;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ PAGE 1: LOGIN / JOIN ═══════════ -->
+<div id="page-login" class="page active">
+  <div class="login-nature-left">
+    <div class="login-field">
+      <input type="text" id="login-name" placeholder="NAME" autocomplete="name" oninput="clearFormError('login-error')"
+             onkeydown="if(event.key==='Enter')handleLogin()">
+    </div>
+    <div class="login-field">
+      <input type="email" id="login-email" placeholder="EMAIL ID" autocomplete="email" oninput="clearFormError('login-error')"
+             onkeydown="if(event.key==='Enter')handleLogin()">
+    </div>
+    <div id="login-error" style="color:#c0392b;font-size:.82rem;margin-top:.3rem;min-height:1.2rem;"></div>
+    <button class="btn-nature-login" id="login-btn" onclick="handleLogin()">JOIN</button>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 3: WEBCAST ROOM ═══════════ -->
+<div id="page-webcast" class="page">
+  <div class="wc-wrap">
+
+    <!-- Top bar -->
+    <div class="wc-topbar">
+      <div class="wc-topbar-right">
+        <span class="wc-user-name">Hello!</span>
+        <button class="wc-logout-btn" onclick="handleLogout()">Logout</button>
+      </div>
+    </div>
+
+    <!-- Body: Video (middle) + Right Panel (Selfie Booth top, Q&A bottom) -->
+    <div class="wc-body">
+
+      <!-- MIDDLE — video -->
+      <div class="wc-left">
+        <div class="wc-video-box" id="wc-video-box">
+          <iframe
+            id="mux-iframe"
+            data-src="https://player.mux.com/4L698GhTZFpHCyTV6yYPvlxK2BIN1qKbOFnHJfZcUGQ"
+            style="width:100%;height:100%;border:none;display:none;"
+            allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;"
+            allowfullscreen>
+          </iframe>
+          <div id="stream-offline" style="display:flex;position:absolute;inset:0;background:#000;
+            align-items:center;justify-content:center;flex-direction:column;gap:.75rem;text-align:center;">
+            <div style="width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.08);
+              display:flex;align-items:center;justify-content:center;">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="1.5">
+                <circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/>
+              </svg>
+            </div>
+            <div>
+              <p style="color:#fff;font-size:.95rem;font-weight:700;margin:0;">Stream is Offline</p>
+              <p style="color:#666;font-size:.78rem;margin:.3rem 0 0;">The live broadcast has not started yet.<br>Please check back shortly.</p>
+            </div>
+          </div>
+        </div>
+        <!-- background strip visible below video -->
+        <div class="wc-left-footer"></div>
+      </div>
+
+      <!-- RIGHT — Selfie Booth (top) + Q&A (bottom) -->
+      <div class="wc-panel">
+        <!-- Selfie Booth entry (top) -->
+        <div class="wc-photobooth">
+          <div class="pb-card-wrapper" onclick="showPage('selfiebooth')">
+            <img src="/assets/images/photo_booth_badge_themed.png" alt="Take a selfie"
+                 class="pb-badge-img">
+          </div>
+        </div>
+        <!-- Q&A section (bottom) -->
+        <div class="wc-qa-section">
+          <div class="wc-qa-input-area">
+            <textarea class="qa-textarea" id="qa-input" placeholder="Please ask your question"></textarea>
+            <button class="qa-send" onclick="sendQ()">Submit Question</button>
+          </div>
+        </div>
+
+      </div><!-- wc-panel -->
+    </div><!-- wc-body -->
+  </div>
+
+  <!-- Feedback Modal -->
+  <div id="feedback-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;
+    background:rgba(0,0,0,.55);z-index:9000;align-items:center;justify-content:center;">
+    <div style="background:#fff;border-radius:10px;padding:2rem;width:90%;max-width:420px;
+      box-shadow:0 8px 40px rgba(0,0,0,.3);position:relative;">
+      <button onclick="toggleFeedbackModal()" style="position:absolute;top:.8rem;right:1rem;
+        background:none;border:none;font-size:1.3rem;cursor:pointer;color:#888;">✕</button>
+      <h3 style="font-size:1rem;font-weight:800;color:#111;margin-bottom:1.2rem;">Session Feedback</h3>
+      <div style="margin-bottom:1rem;">
+        <label style="font-size:.82rem;font-weight:700;color:#333;display:block;margin-bottom:.4rem;">Your Message</label>
+        <textarea id="feedback-text" rows="4" placeholder="Share your thoughts about this session…"
+          style="width:100%;border:1.5px solid #ccc;border-radius:6px;padding:.6rem .8rem;
+          font-size:.88rem;resize:none;outline:none;font-family:inherit;"></textarea>
+      </div>
+      <div id="feedback-error" style="color:#c0392b;font-size:.8rem;margin-bottom:.6rem;min-height:1rem;"></div>
+      <button id="feedback-submit-btn" onclick="submitFeedback()"
+        style="width:100%;background:#000;border:none;color:#fff;font-weight:700;
+        font-size:.92rem;padding:.7rem;border-radius:6px;cursor:pointer;">Submit Feedback</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ SELFIE BOOTH PAGE ═══════════ -->
+<div id="page-selfiebooth" class="page">
+  <div class="sb-topbar">
+    <button class="sb-back-btn" onclick="stopPhotoBooth();showPage('webcast')">
+      <i class="bi bi-arrow-left"></i> Back
+    </button>
+    <p class="sb-title">Selfie Booth</p>
+  </div>
+  <div class="sb-body">
+    <div class="sb-card">
+      <div class="pb-cam-wrap">
+        <div class="pb-photo-zone" style="position:absolute;top:20%;left:0;width:100%;height:60%;overflow:hidden;">
+          <video id="pb-video" autoplay playsinline muted style="width:100%;height:100%;object-fit:cover;transform:scaleX(-1);display:none;"></video>
+        </div>
+        <canvas id="pb-canvas" style="display:none;"></canvas>
+        <img id="pb-photo" style="display:none;" alt="Captured photo">
+        <img id="pb-frame-overlay" src="/assets/images/01 tr.png" style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain;pointer-events:none;z-index:10;">
+        <div id="pb-placeholder" class="pb-placeholder" style="display:flex;z-index:100;">
+          <i class="bi bi-camera-fill"></i>
+          <p>Camera preview will appear here.<br>Allow camera access to use the selfie booth.</p>
+        </div>
+      </div>
+      <div class="pb-actions">
+        <button class="pb-btn pb-btn-primary" id="pb-start-btn" onclick="startPhotoBooth()">Start Camera</button>
+        <button class="pb-btn pb-btn-primary" id="pb-capture-btn" onclick="capturePhoto()" style="display:none;">Capture Photo</button>
+        <button class="pb-btn pb-btn-secondary" id="pb-retake-btn" onclick="retakePhoto()" style="display:none;">Retake</button>
+        <button class="pb-btn pb-btn-secondary" id="pb-download-btn" onclick="downloadPhoto()" style="display:none;">Download Photo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 4: ADMIN LOGIN ═══════════ -->
+<div id="page-admin-login" class="page page-content" style="align-items:center;justify-content:center;">
+  <div class="admin-login-card">
+    <div class="admin-login-logo">
+      <h1>Admin Login</h1>
+      <p>Authorised personnel only</p>
+    </div>
+    <div class="adm-field">
+      <label>Username</label>
+      <input type="text" placeholder="Enter username">
+    </div>
+    <div class="adm-field">
+      <label>Password</label>
+      <input type="password" placeholder="Enter password">
+    </div>
+    <button class="btn-admin-login" onclick="showPage('admin-dashboard')">Login</button>
+    <div class="admin-security-note">
+      <i class="bi bi-lock-fill"></i> Restricted access · All sessions are logged
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PAGE 5: ADMIN DASHBOARD ═══════════ -->
+<div id="page-admin-dashboard" class="page" style="flex-direction:column;">
+  <div class="adm-wrap">
+    <!-- Green header -->
+    <div class="adm-green-header">
+      <div class="adm-gbs-logo">
+        <div>
+          <div class="adm-gbs-text"><span class="logo-star-r">◀</span><span class="logo-star-g">▶</span>GBS</div>
+          <div class="adm-gbs-sub">Global Business Services</div>
+        </div>
+      </div>
+      <div class="adm-circle-badge">B<br>A·Y<br>E·R</div>
+    </div>
+    <!-- Sub nav -->
+    <div class="adm-subnav">
+      <a href="#" onclick="admSection('users',this);return false;">Users</a>
+      <span class="sep">|</span>
+      <a href="#" onclick="admSection('questions',this);return false;">Questions</a>
+      <span class="sep">|</span>
+      <a href="#" onclick="admSection('feedback',this);return false;">Feedback</a>
+    </div>
+    <!-- Content -->
+    <div class="adm-page-content">
+
+      <!-- USERS section (default) -->
+      <div id="adm-section-users" class="adm-section active">
+        <div class="adm-toolbar">
+          <button class="adm-excel-btn"><i class="bi bi-file-earmark-excel" style="font-size:1.8rem;color:#1d6f2a;"></i></button>
+          <div class="adm-toolbar-left">
+            <span>Total Users: <strong>51</strong></span>
+            <span>Currently Logged In: <strong>0</strong></span>
+          </div>
+        </div>
+        <table class="adm-table">
+          <thead><tr><th>Name</th><th>Email ID</th><th>Login Time</th><th>Logout Time</th></tr></thead>
+          <tbody>
+            <tr><td>pawan</td><td>Pawan@coact.co.in</td><td>Jul 03, 10:29 am</td><td>Jul 03, 11:38 am</td></tr>
+            <tr><td>eugyjdh</td><td>admin@coact.com</td><td>Jul 03, 09:53 am</td><td>Jul 03, 09:54 am</td></tr>
+            <tr><td>shraddha</td><td>shraddha.salvo@bayer.com</td><td>Jul 02, 13:47 pm</td><td>Jul 02, 13:56 pm</td></tr>
+            <tr><td>bashas</td><td>neeraj@coact.co.in</td><td>Jun 29, 17:39 pm</td><td>Jun 29, 17:47 pm</td></tr>
+            <tr><td>Muthu</td><td>muthu@coact.co.in</td><td>Jun 29, 16:42 pm</td><td>Jun 29, 16:55 pm</td></tr>
+            <tr><td>basha</td><td>hussain@coact.co.in</td><td>Jun 25, 18:00 pm</td><td>Jun 25, 18:00 pm</td></tr>
+            <tr><td>basha</td><td>hussainbasha911@gmail.com</td><td>Jun 24, 15:37 pm</td><td>Jun 24, 15:37 pm</td></tr>
+            <tr><td>Basamma</td><td>basammagk21@gmail.com</td><td>Jun 22, 17:53 pm</td><td>Jun 22, 17:56 pm</td></tr>
+            <tr><td>megha</td><td>megha@coact.co.in</td><td>Jun 22, 17:53 pm</td><td>Jun 22, 18:06 pm</td></tr>
+            <tr><td>PAWAN SHILWANT</td><td>test@bayer.com</td><td>Jun 22, 17:51 pm</td><td>Jun 22, 17:54 pm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- QUESTIONS section -->
+      <div id="adm-section-questions" class="adm-section">
+        <div class="adm-toolbar">
+          <button class="adm-excel-btn"><i class="bi bi-file-earmark-excel" style="font-size:1.8rem;color:#1d6f2a;"></i></button>
+          <div class="adm-toolbar-left">
+          </div>
+        </div>
+        <table class="adm-table">
+          <thead><tr><th>Name</th><th>Email ID</th><th>Question</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Dr. Rajesh Mehta</td><td>rajesh@apollo.com</td><td>What is the first-line therapy for NSCLC with EGFR mutation?</td><td>Jul 03, 2:15 pm</td></tr>
+            <tr><td>Dr. Anitha K.</td><td>anitha@medplus.in</td><td>Role of immunotherapy in triple-negative breast cancer?</td><td>Jul 03, 2:20 pm</td></tr>
+            <tr><td>Dr. Suresh Patel</td><td>s.patel@fortis.com</td><td>What biomarkers before starting CDK4/6 inhibitors?</td><td>Jul 03, 2:32 pm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- FEEDBACK section -->
+      <div id="adm-section-feedback" class="adm-section">
+        <div class="adm-toolbar">
+          <button class="adm-excel-btn"><i class="bi bi-file-earmark-excel" style="font-size:1.8rem;color:#1d6f2a;"></i></button>
+          <div class="adm-toolbar-left">
+          </div>
+        </div>
+        <table class="adm-table">
+          <thead><tr><th>Name</th><th>Email ID</th><th>Rating</th><th>Comments</th><th>Time</th></tr></thead>
+          <tbody>
+            <tr><td>Dr. Rajesh Mehta</td><td>rajesh@apollo.com</td><td>★★★★★</td><td>Excellent session, very relevant.</td><td>Jul 03, 5:10 pm</td></tr>
+            <tr><td>Dr. Anitha K.</td><td>anitha@medplus.in</td><td>★★★★☆</td><td>Good content, could use more case studies.</td><td>Jul 03, 5:15 pm</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div><!-- adm-page-content (new) -->
+  </div><!-- adm-wrap (new) -->
+</div><!-- page-admin-dashboard -->
+
+<!-- old sidebar/main removed -->
+<div style="display:none"><div>
+      <div class="adm-brand"><i class="bi bi-broadcast"></i><span>PharmaWebcast</span></div>
+      <div class="adm-nav-group">OVERVIEW</div>
+      <button class="adm-nav-link active" onclick="admSection('dashboard',this)"><i class="bi bi-speedometer2"></i>Dashboard</button>
+      <button class="adm-nav-link" onclick="admSection('events',this)"><i class="bi bi-calendar-event"></i>Events</button>
+      <div class="adm-nav-group">ATTENDEES</div>
+      <button class="adm-nav-link" onclick="admSection('attendees',this)"><i class="bi bi-people"></i>All Attendees</button>
+      <button class="adm-nav-link" onclick="admSection('registrations',this)"><i class="bi bi-clipboard-check"></i>Registrations</button>
+      <div class="adm-nav-group">LIVE EVENT</div>
+      <button class="adm-nav-link" onclick="admSection('questions',this)"><i class="bi bi-chat-square-text"></i>Questions <span style="background:#ef4444;color:#fff;font-size:.62rem;padding:.1rem .35rem;border-radius:4px;margin-left:auto;">3</span></button>
+      <button class="adm-nav-link" onclick="admSection('polls',this)"><i class="bi bi-bar-chart"></i>Polls</button>
+      <button class="adm-nav-link" onclick="admSection('webcast',this)"><i class="bi bi-broadcast"></i>Webcast Ctrl</button>
+      <div class="adm-nav-group">ANALYTICS</div>
+      <button class="adm-nav-link" onclick="admSection('attendance',this)"><i class="bi bi-graph-up"></i>Attendance</button>
+      <button class="adm-nav-link" onclick="admSection('reports',this)"><i class="bi bi-file-earmark-bar-graph"></i>Reports</button>
+      <button class="adm-nav-link" onclick="admSection('feedback',this)"><i class="bi bi-star-half"></i>Feedback</button>
+      <div class="adm-nav-group">CONFIGURATION</div>
+      <button class="adm-nav-link" onclick="admSection('settings',this)"><i class="bi bi-gear"></i>Settings</button>
+      <button class="adm-nav-link" onclick="admSection('emails',this)"><i class="bi bi-envelope"></i>Email Queue</button>
+    </div>
+    <!-- Main -->
+    <div class="adm-main">
+      <div class="adm-topbar">
+        <p class="adm-topbar-title" id="adm-page-title">Dashboard</p>
+        <div class="adm-topbar-right">
+          <span class="adm-topbar-email">admin@pharmawebcast.com</span>
+          <div class="adm-avatar">A</div>
+          <button class="btn-sm-action" onclick="showPage('admin-login')"><i class="bi bi-box-arrow-right"></i> Logout</button>
+        </div>
+      </div>
+      <div class="adm-page-content">
+
+        <!-- DASHBOARD -->
+        <div id="adm-section-dashboard" class="adm-section active">
+          <div class="stat-grid">
+            <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-people-fill"></i></div><div><div class="stat-val">1,248</div><div class="stat-lbl">Total Registrations</div></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="bi bi-check-circle-fill"></i></div><div><div class="stat-val">1,091</div><div class="stat-lbl">Approved</div></div></div>
+            <div class="stat-card"><div class="stat-icon amber"><i class="bi bi-hourglass-split"></i></div><div><div class="stat-val">87</div><div class="stat-lbl">Pending</div></div></div>
+            <div class="stat-card"><div class="stat-icon red"><i class="bi bi-eye-fill"></i></div><div><div class="stat-val">324</div><div class="stat-lbl">Live Viewers</div></div></div>
+            <div class="stat-card"><div class="stat-icon purple"><i class="bi bi-chat-square-text-fill"></i></div><div><div class="stat-val">512</div><div class="stat-lbl">Q&amp;A Submitted</div></div></div>
+            <div class="stat-card"><div class="stat-icon teal"><i class="bi bi-star-fill"></i></div><div><div class="stat-val">4.2/5</div><div class="stat-lbl">Avg Rating</div></div></div>
+          </div>
+          <div class="charts-row">
+            <div class="adm-card"><div class="adm-card-hdr"><h3>Registrations — Last 14 Days</h3></div><div class="chart-ph"><i class="bi bi-bar-chart-line"></i><span>Chart.js renders here</span></div></div>
+            <div class="adm-card"><div class="adm-card-hdr"><h3>Status Breakdown</h3></div><div class="chart-ph"><i class="bi bi-pie-chart"></i><span>Doughnut chart</span></div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Recent Registrations</h3><a href="#">View all →</a></div>
+            <table class="adm-table">
+              <thead><tr><th>ID</th><th>Doctor</th><th>Email</th><th>Event</th><th>Status</th><th>Date</th><th>Action</th></tr></thead>
+              <tbody>
+                <tr><td style="font-family:monospace;color:#60a5fa">PW-082</td><td>Dr. Rajesh Mehta</td><td>rajesh.mehta@apollo.com</td><td>Oncology Summit</td><td><span class="badge-approved">Approved</span></td><td>03 Jul</td><td><button class="btn-sm-action">View</button></td></tr>
+                <tr><td style="font-family:monospace;color:#60a5fa">PW-081</td><td>Dr. Anitha Kumar</td><td>anitha.k@medplus.in</td><td>Oncology Summit</td><td><span class="badge-pending">Pending</span></td><td>03 Jul</td><td><button class="btn-sm-action" onclick="this.closest('tr').querySelector('td:nth-child(5) span').className='badge-approved';this.closest('tr').querySelector('td:nth-child(5) span').textContent='Approved';">Approve</button></td></tr>
+                <tr><td style="font-family:monospace;color:#60a5fa">PW-080</td><td>Dr. Suresh Patel</td><td>s.patel@fortis.com</td><td>Cardio Live</td><td><span class="badge-approved">Approved</span></td><td>02 Jul</td><td><button class="btn-sm-action">View</button></td></tr>
+                <tr><td style="font-family:monospace;color:#60a5fa">PW-079</td><td>Dr. Priya Nair</td><td>priya.n@narayana.com</td><td>Oncology Summit</td><td><span class="badge-rejected">Rejected</span></td><td>02 Jul</td><td><button class="btn-sm-action">View</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- QUESTIONS -->
+        <div id="adm-section-questions" class="adm-section">
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Live Q&amp;A — Pending Moderation</h3><span style="font-size:.78rem;color:#64748b;">3 awaiting approval</span></div>
+            <table class="adm-table">
+              <thead><tr><th>Doctor</th><th>Question</th><th>Upvotes</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td>Dr. Anitha K.</td><td>What is the recommended first-line therapy for NSCLC patients with EGFR mutation?</td><td>11</td><td><span class="badge-pending">Pending</span></td><td><button class="btn-sm-action" style="color:#10b981;border-color:#10b981;" onclick="approveQ(this)">✓ Approve</button> <button class="btn-sm-action" onclick="this.closest('tr').remove()">✕ Dismiss</button></td></tr>
+                <tr><td>Dr. Suresh P.</td><td>Can you elaborate on immunotherapy combinations in triple-negative breast cancer?</td><td>7</td><td><span class="badge-pending">Pending</span></td><td><button class="btn-sm-action" style="color:#10b981;border-color:#10b981;" onclick="approveQ(this)">✓ Approve</button> <button class="btn-sm-action" onclick="this.closest('tr').remove()">✕ Dismiss</button></td></tr>
+                <tr><td>Dr. Priya N.</td><td>What biomarkers should we test before starting CDK4/6 inhibitors?</td><td>4</td><td><span class="badge-pending">Pending</span></td><td><button class="btn-sm-action" style="color:#10b981;border-color:#10b981;" onclick="approveQ(this)">✓ Approve</button> <button class="btn-sm-action" onclick="this.closest('tr').remove()">✕ Dismiss</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- POLLS -->
+        <div id="adm-section-polls" class="adm-section">
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1rem;">
+            <div class="adm-card">
+              <div class="adm-card-hdr"><h3>Immunotherapy Poll</h3><span class="badge-live" id="poll-badge-1">Live</span></div>
+              <div style="padding:.75rem 1rem;">
+                <p style="font-size:.82rem;color:#cbd5e1;margin-bottom:.75rem;">Which immunotherapy agent do you most frequently use?</p>
+                <div class="poll-bar-row"><div class="poll-bar-label"><span>Pembrolizumab</span><span>52%</span></div><div class="poll-bar-track"><div class="poll-bar-fill" style="width:52%"></div></div></div>
+                <div class="poll-bar-row"><div class="poll-bar-label"><span>Atezolizumab</span><span>21%</span></div><div class="poll-bar-track"><div class="poll-bar-fill" style="width:21%"></div></div></div>
+                <div style="font-size:.75rem;color:#64748b;margin:.5rem 0 .75rem;">142 responses</div>
+                <button class="btn-sm-action" onclick="var b=document.getElementById('poll-badge-1');b.className='badge-pending';b.textContent='Closed';" style="width:100%;">Close Poll</button>
+              </div>
+            </div>
+            <div class="adm-card">
+              <div class="adm-card-hdr"><h3>Patient Preference Poll</h3><span class="badge-pending">Draft</span></div>
+              <div style="padding:.75rem 1rem;">
+                <p style="font-size:.82rem;color:#cbd5e1;margin-bottom:.75rem;">How often do patients ask about immunotherapy options?</p>
+                <p style="font-size:.75rem;color:#475569;margin-bottom:.75rem;">Not launched yet · 0 responses</p>
+                <button class="btn-sm-action" style="color:#10b981;border-color:#10b981;width:100%;" onclick="this.closest('.adm-card').querySelector('span').className='badge-live';this.closest('.adm-card').querySelector('span').textContent='Live';this.textContent='Close Poll';">▶ Launch Poll</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ATTENDANCE -->
+        <div id="adm-section-attendance" class="adm-section">
+          <div class="stat-grid" style="margin-bottom:1.25rem;">
+            <div class="stat-card"><div class="stat-icon green"><i class="bi bi-eye-fill"></i></div><div><div class="stat-val">324</div><div class="stat-lbl"><span class="live-dot"></span>Live Now</div></div></div>
+            <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-person-check-fill"></i></div><div><div class="stat-val">891</div><div class="stat-lbl">Total Joins</div></div></div>
+            <div class="stat-card"><div class="stat-icon teal"><i class="bi bi-clock-fill"></i></div><div><div class="stat-val">47m</div><div class="stat-lbl">Avg Watch Time</div></div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Live Attendees</h3><span style="font-size:.75rem;color:#64748b;">Auto-refreshes every 15s</span></div>
+            <table class="adm-table">
+              <thead><tr><th>Doctor</th><th>Joined At</th><th>Watch Time</th><th>Last Ping</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Dr. Rajesh Mehta</td><td>2:02 PM</td><td>48:12</td><td>2s ago</td><td><span class="badge-live"><span class="live-dot"></span>Live</span></td></tr>
+                <tr><td>Dr. Anitha Kumar</td><td>2:00 PM</td><td>50:44</td><td>5s ago</td><td><span class="badge-live"><span class="live-dot"></span>Live</span></td></tr>
+                <tr><td>Dr. Suresh Patel</td><td>2:15 PM</td><td>35:10</td><td>8s ago</td><td><span class="badge-live"><span class="live-dot"></span>Live</span></td></tr>
+                <tr><td>Dr. Priya Nair</td><td>2:05 PM</td><td>2:11</td><td>6m ago</td><td><span class="badge-pending">Left</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REPORTS -->
+        <div id="adm-section-reports" class="adm-section">
+          <div class="adm-card" style="margin-bottom:1rem;">
+            <div class="adm-card-hdr"><h3>Generate Report</h3></div>
+            <div style="padding:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+              <select class="form-select" style="max-width:220px;background:#0f172a;border-color:#334155;color:#cbd5e1;border-radius:8px;">
+                <option>Registration Summary</option>
+                <option>Attendance Report</option>
+                <option>Feedback Analysis</option>
+                <option>CME Certificate List</option>
+                <option>Q&amp;A Export</option>
+              </select>
+              <button class="btn-dl" onclick="genReport()"><i class="bi bi-gear-fill"></i>Generate</button>
+            </div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Generated Reports</h3></div>
+            <table class="adm-table">
+              <thead><tr><th>Report</th><th>Event</th><th>Generated</th><th>Status</th><th>Download</th></tr></thead>
+              <tbody id="reports-tbody">
+                <tr><td>Registration Summary</td><td>Oncology Summit 2024</td><td>03 Jul 10:30</td><td><span class="badge-approved">Ready</span></td><td><button class="btn-dl"><i class="bi bi-download"></i>CSV</button> <button class="btn-dl" style="background:#059669;"><i class="bi bi-filetype-pdf"></i>PDF</button></td></tr>
+                <tr><td>Attendance Report</td><td>Oncology Summit 2024</td><td>03 Jul 09:15</td><td><span class="badge-approved">Ready</span></td><td><button class="btn-dl"><i class="bi bi-download"></i>CSV</button></td></tr>
+                <tr><td>Feedback Analysis</td><td>Cardio Live Q1</td><td>28 Jun 14:00</td><td><span class="badge-approved">Ready</span></td><td><button class="btn-dl"><i class="bi bi-download"></i>CSV</button> <button class="btn-dl" style="background:#059669;"><i class="bi bi-filetype-pdf"></i>PDF</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div id="adm-section-feedback" class="adm-section">
+          <div class="stat-grid" style="margin-bottom:1.25rem;">
+            <div class="stat-card"><div class="stat-icon teal"><i class="bi bi-star-fill"></i></div><div><div class="stat-val">4.2</div><div class="stat-lbl">Avg Rating</div></div></div>
+            <div class="stat-card"><div class="stat-icon blue"><i class="bi bi-people-fill"></i></div><div><div class="stat-val">312</div><div class="stat-lbl">Responses</div></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="bi bi-hand-thumbs-up-fill"></i></div><div><div class="stat-val">87%</div><div class="stat-lbl">Recommend Rate</div></div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Feedback Entries</h3><button class="btn-dl"><i class="bi bi-download"></i>Export CSV</button></div>
+            <table class="adm-table">
+              <thead><tr><th>Doctor</th><th>Rating</th><th>NPS</th><th>Comment</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td>Dr. Rajesh M.</td><td>⭐⭐⭐⭐ 4/5</td><td>9</td><td>"Excellent session, very relevant…"</td><td><button class="btn-sm-action">Flag</button></td></tr>
+                <tr><td>Dr. Anitha K.</td><td>⭐⭐⭐⭐⭐ 5/5</td><td>10</td><td>"Best CME webcast I've attended this year"</td><td><button class="btn-sm-action">Flag</button></td></tr>
+                <tr><td>Dr. Suresh P.</td><td>⭐⭐⭐ 3/5</td><td>7</td><td>"Good content, audio could be improved"</td><td><button class="btn-sm-action">Flag</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- EVENTS -->
+        <div id="adm-section-events" class="adm-section">
+          <div style="margin-bottom:1rem;display:flex;justify-content:flex-end;">
+            <button class="btn-dl" style="background:#059669;padding:.55rem 1rem;font-size:.83rem;border-radius:8px;"><i class="bi bi-plus-lg me-1"></i>New Event</button>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>All Events</h3></div>
+            <table class="adm-table">
+              <thead><tr><th>Title</th><th>Date</th><th>Registrations</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td>Oncology Advances Summit 2024</td><td>18 Jul 2024</td><td>1,248</td><td><span class="badge-live">Live</span></td><td><button class="btn-sm-action">Edit</button> <button class="btn-sm-action">View</button></td></tr>
+                <tr><td>Cardio Innovations Live</td><td>25 Jul 2024</td><td>342</td><td><span class="badge-approved">Published</span></td><td><button class="btn-sm-action">Edit</button> <button class="btn-sm-action">View</button></td></tr>
+                <tr><td>Neuro Live Q3 2024</td><td>05 Aug 2024</td><td>89</td><td><span class="badge-pending">Draft</span></td><td><button class="btn-sm-action">Edit</button> <button class="btn-sm-action">View</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ATTENDEES -->
+        <div id="adm-section-attendees" class="adm-section">
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>All Attendees</h3></div>
+            <table class="adm-table">
+              <thead><tr><th>ID</th><th>Doctor</th><th>Email</th><th>Specialty</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                <tr><td style="font-family:monospace;color:#60a5fa;">PW-082</td><td>Dr. Rajesh Mehta</td><td>rajesh.mehta@apollo.com</td><td>Oncology</td><td><span class="badge-approved">Approved</span></td><td><button class="btn-sm-action">View</button></td></tr>
+                <tr><td style="font-family:monospace;color:#60a5fa;">PW-081</td><td>Dr. Anitha Kumar</td><td>anitha.k@medplus.in</td><td>Oncology</td><td><span class="badge-pending">Pending</span></td><td><button class="btn-sm-action" style="color:#10b981;border-color:#10b981;" onclick="approveQ(this)">✓ Approve</button></td></tr>
+                <tr><td style="font-family:monospace;color:#60a5fa;">PW-080</td><td>Dr. Suresh Patel</td><td>s.patel@fortis.com</td><td>Cardiology</td><td><span class="badge-approved">Approved</span></td><td><button class="btn-sm-action">View</button></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- REGISTRATIONS -->
+        <div id="adm-section-registrations" class="adm-section">
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Registration Reports by Event</h3><button class="btn-dl"><i class="bi bi-download"></i>Export</button></div>
+            <table class="adm-table">
+              <thead><tr><th>Event</th><th>Total</th><th>Approved</th><th>Pending</th><th>Rejected</th></tr></thead>
+              <tbody>
+                <tr><td>Oncology Summit 2024</td><td>1,248</td><td style="color:#34d399;">1,091</td><td style="color:#fbbf24;">87</td><td style="color:#f87171;">70</td></tr>
+                <tr><td>Cardio Innovations</td><td>342</td><td style="color:#34d399;">298</td><td style="color:#fbbf24;">24</td><td style="color:#f87171;">20</td></tr>
+                <tr><td>Neuro Live Q3</td><td>89</td><td style="color:#34d399;">61</td><td style="color:#fbbf24;">28</td><td style="color:#f87171;">0</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- WEBCAST CONTROL -->
+        <div id="adm-section-webcast" class="adm-section">
+          <div class="stat-grid" style="margin-bottom:1.25rem;">
+            <div class="stat-card"><div class="stat-icon red"><i class="bi bi-broadcast-pin"></i></div><div><div class="stat-val" style="color:#f87171;">LIVE</div><div class="stat-lbl">Stream Status</div></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="bi bi-eye-fill"></i></div><div><div class="stat-val">324</div><div class="stat-lbl">Live Viewers</div></div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Webcast Controls</h3></div>
+            <div style="padding:1rem;display:flex;gap:.75rem;flex-wrap:wrap;">
+              <button class="btn-dl" style="background:#059669;padding:.6rem 1.2rem;" onclick="alert('Webcast is already LIVE')"><i class="bi bi-broadcast"></i> Go Live</button>
+              <button class="btn-dl" style="background:#f59e0b;padding:.6rem 1.2rem;" onclick="alert('Stream paused')"><i class="bi bi-pause-fill"></i> Pause</button>
+              <button class="btn-dl" style="background:#ef4444;padding:.6rem 1.2rem;" onclick="alert('Webcast ended')"><i class="bi bi-stop-fill"></i> End Webcast</button>
+              <button class="btn-dl" style="background:#7c3aed;padding:.6rem 1.2rem;"><i class="bi bi-door-open"></i> Backstage</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- SETTINGS -->
+        <div id="adm-section-settings" class="adm-section">
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Platform Settings</h3></div>
+            <div style="padding:1rem;max-width:500px;">
+              <div class="adm-field" style="margin-bottom:1rem;">
+                <label style="font-size:.8rem;font-weight:600;color:#94a3b8;display:block;margin-bottom:.35rem;">Platform Name</label>
+                <input class="form-control" style="background:#0f172a;border-color:#334155;color:#e2e8f0;border-radius:8px;" value="PharmaWebcast">
+              </div>
+              <div class="adm-field" style="margin-bottom:1rem;">
+                <label style="font-size:.8rem;font-weight:600;color:#94a3b8;display:block;margin-bottom:.35rem;">Support Email</label>
+                <input class="form-control" style="background:#0f172a;border-color:#334155;color:#e2e8f0;border-radius:8px;" value="support@pharmawebcast.com">
+              </div>
+              <div class="adm-field" style="margin-bottom:1rem;">
+                <label style="font-size:.8rem;font-weight:600;color:#94a3b8;display:block;margin-bottom:.35rem;">Default Approval Mode</label>
+                <select class="form-select" style="background:#0f172a;border-color:#334155;color:#e2e8f0;border-radius:8px;"><option selected>Manual Approval</option><option>Auto-Approve All</option></select>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;background:#0f172a;border:1px solid #334155;border-radius:8px;padding:.7rem .9rem;">
+                <span style="font-size:.85rem;color:#cbd5e1;">Maintenance Mode</span>
+                <div class="form-check form-switch mb-0"><input class="form-check-input" type="checkbox" style="cursor:pointer;"></div>
+              </div>
+              <button class="btn-dl" style="padding:.6rem 1.5rem;font-size:.88rem;">Save Settings</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- EMAIL QUEUE -->
+        <div id="adm-section-emails" class="adm-section">
+          <div class="stat-grid" style="margin-bottom:1.25rem;">
+            <div class="stat-card"><div class="stat-icon amber"><i class="bi bi-envelope"></i></div><div><div class="stat-val">23</div><div class="stat-lbl">Pending</div></div></div>
+            <div class="stat-card"><div class="stat-icon green"><i class="bi bi-envelope-check"></i></div><div><div class="stat-val">4,821</div><div class="stat-lbl">Sent</div></div></div>
+            <div class="stat-card"><div class="stat-icon red"><i class="bi bi-envelope-x"></i></div><div><div class="stat-val">3</div><div class="stat-lbl">Failed</div></div></div>
+          </div>
+          <div class="adm-card">
+            <div class="adm-card-hdr"><h3>Email Queue</h3></div>
+            <table class="adm-table">
+              <thead><tr><th>#</th><th>Recipient</th><th>Subject</th><th>Status</th><th>Scheduled</th></tr></thead>
+              <tbody>
+                <tr><td style="color:#475569;">#4844</td><td>rajesh.mehta@apollo.com</td><td>Reminder: 1h until Oncology Summit</td><td><span class="badge-pending">Pending</span></td><td>18 Jul 1:00 PM</td></tr>
+                <tr><td style="color:#475569;">#4843</td><td>anitha.k@medplus.in</td><td>Registration Confirmed</td><td><span class="badge-approved">Sent</span></td><td>03 Jul 10:05</td></tr>
+                <tr><td style="color:#475569;">#4842</td><td>s.patel@fortis.com</td><td>Thank You for Attending</td><td><span class="badge-approved">Sent</span></td><td>03 Jul 06:30</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+    </div><!-- end old hidden content -->
+
+<!-- ═══════════ NAVIGATION BAR ═══════════ -->
+<div id="nav-bar">
+  <button class="active" onclick="showPage('login')" id="nav-login">🔐 Join Webcast</button>
+  <div class="sep"></div>
+  <button onclick="showPage('webcast')" id="nav-webcast">📡 Webcast Room</button>
+  <div class="sep"></div>
+  <button onclick="showPage('admin-login')" id="nav-admin-login">🛡 Admin Login</button>
+  <div class="sep"></div>
+  <button onclick="showPage('admin-dashboard')" id="nav-admin-dashboard">⚙️ Admin Dashboard</button>
+</div>
+
+<script>
+const pages = ['login','webcast','selfiebooth','admin-login','admin-dashboard'];
+
+function showPage(id) {
+  pages.forEach(p => {
+    document.getElementById('page-'+p).classList.remove('active');
+    const btn = document.getElementById('nav-'+p);
+    if (btn) btn.classList.remove('active');
+  });
+  document.getElementById('page-'+id).classList.add('active');
+  const btn = document.getElementById('nav-'+id);
+  if (btn) btn.classList.add('active');
+  window.scrollTo(0,0);
+  localStorage.setItem('pw_page', id);
+  
+  if (id === 'selfiebooth') {
+    resetSelfieBooth();
+  } else if (id === 'webcast') {
+    var nameEl = document.querySelector('.wc-user-name');
+    if (nameEl) nameEl.textContent = 'Hello ' + (localStorage.getItem('pw_user_name') || 'Guest') + '!';
+  } else {
+    stopPhotoBooth();
+  }
+}
+
+// Restore last visited page on load — poll rendered after all functions defined
+window.addEventListener('DOMContentLoaded', function(){
+  const saved = localStorage.getItem('pw_page');
+  if (saved && pages.includes(saved)) showPage(saved);
+});
+
+function toggleQuiz() {
+  const o = document.getElementById('quiz-overlay');
+  o.classList.toggle('show');
+}
+function toggleSurvey() {
+  const o = document.getElementById('survey-overlay');
+  o.classList.toggle('show');
+}
+
+function admSection(id, el) {
+  document.querySelectorAll('.adm-section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById('adm-section-'+id);
+  if (sec) sec.classList.add('active');
+  document.querySelectorAll('.adm-subnav a').forEach(a => a.style.fontWeight = '600');
+  if (el) el.style.fontWeight = '900';
+}
+
+function clearFormError(id) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = '';
+}
+
+function showFormError(id, msg) {
+  var el = document.getElementById(id);
+  if (el) el.textContent = msg;
+}
+
+function isValidEmail(v) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+}
+
+function getRegisteredUsers() {
+  try { return JSON.parse(localStorage.getItem('pw_registered_users') || '[]'); } catch(e) { return []; }
+}
+
+function saveRegisteredUser(name, email) {
+  var users = getRegisteredUsers();
+  // avoid duplicate email
+  if (!users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase(); })) {
+    var now = new Date();
+    var ts = now.toLocaleDateString('en-IN',{day:'2-digit',month:'short'}) + ', ' + now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+    users.push({ name: name, email: email.toLowerCase(), registeredAt: ts, lastLoginAt: null, lastLogoutAt: null });
+    localStorage.setItem('pw_registered_users', JSON.stringify(users));
+  }
+}
+
+function getTimestampNow() {
+  var now = new Date();
+  return now.toLocaleDateString('en-IN',{day:'2-digit',month:'short'}) + ', ' + now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+
+function markUserLogin(email) {
+  var users = getRegisteredUsers();
+  var u = users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase(); });
+  if (u) {
+    u.lastLoginAt = getTimestampNow();
+    localStorage.setItem('pw_registered_users', JSON.stringify(users));
+  }
+}
+
+function markUserLogout(email) {
+  var users = getRegisteredUsers();
+  var u = users.find(function(u){ return u.email.toLowerCase() === email.toLowerCase(); });
+  if (u) {
+    u.lastLogoutAt = getTimestampNow();
+    localStorage.setItem('pw_registered_users', JSON.stringify(users));
+  }
+}
+
+function handleLogout() {
+  var email = localStorage.getItem('pw_user_email');
+  if (email) markUserLogout(email);
+  localStorage.removeItem('pw_user_name');
+  localStorage.removeItem('pw_user_email');
+  localStorage.removeItem('pw_heartbeat');
+  showPage('login');
+}
+
+// Heartbeat — updates every 20s while user is on webcast page
+setInterval(function(){
+  var page = document.getElementById('page-webcast');
+  if (page && page.classList.contains('active') && localStorage.getItem('pw_user_email')) {
+    localStorage.setItem('pw_heartbeat', Date.now().toString());
+  }
+}, 20000);
+
+// ── Stream status — show player only when Mux stream is live ──
+var MUX_PLAYBACK_ID = '4L698GhTZFpHCyTV6yYPvlxK2BIN1qKbOFnHJfZcUGQ';
+var streamIsLive = false;
+
+function checkStreamStatus() {
+  if (streamIsLive) return;
+  var page = document.getElementById('page-webcast');
+  if (!page || !page.classList.contains('active')) return;
+  fetch('https://stream.mux.com/' + MUX_PLAYBACK_ID + '.m3u8', { method: 'HEAD' })
+    .then(function(res){
+      if (res.ok) {
+        streamIsLive = true;
+        var iframe = document.getElementById('mux-iframe');
+        iframe.src = iframe.getAttribute('data-src');
+        iframe.style.display = 'block';
+        document.getElementById('stream-offline').style.display = 'none';
+      }
+    })
+    .catch(function(){ /* offline — keep placeholder */ });
+}
+checkStreamStatus();
+setInterval(checkStreamStatus, 30000);
+
+function handleLogin() {
+  var name  = document.getElementById('login-name').value.trim();
+  var email = document.getElementById('login-email').value.trim();
+  var btn   = document.getElementById('login-btn');
+
+  if (!name) { showFormError('login-error','Please enter your name.'); document.getElementById('login-name').focus(); return; }
+  if (!email) { showFormError('login-error','Please enter your email address.'); document.getElementById('login-email').focus(); return; }
+  if (!isValidEmail(email)) { showFormError('login-error','Enter a valid email address (e.g. you@example.com).'); document.getElementById('login-email').focus(); return; }
+
+  btn.textContent = 'Joining…';
+  btn.disabled = true;
+  setTimeout(function() {
+    btn.textContent = 'JOIN';
+    btn.disabled = false;
+
+    saveRegisteredUser(name, email);
+    markUserLogin(email);
+    localStorage.setItem('pw_user_name', name);
+    localStorage.setItem('pw_user_email', email.toLowerCase());
+    localStorage.setItem('pw_heartbeat', Date.now().toString());
+
+    // Persist the attendee to the database (users table)
+    fetch('/api/save-user.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: name, email: email })
+    }).catch(function(err){ console.error('save-user failed:', err); });
+
+    showPage('webcast');
+  }, 600);
+}
+
+function getTimestamp() {
+  var now = new Date();
+  return now.toLocaleDateString('en-IN',{day:'2-digit',month:'short'}) + ', ' +
+         now.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+}
+
+function toggleFeedbackModal() {
+  var modal = document.getElementById('feedback-modal');
+  var isOpen = modal.style.display === 'flex';
+  modal.style.display = isOpen ? 'none' : 'flex';
+  if (!isOpen) {
+    document.getElementById('feedback-text').value = '';
+    document.getElementById('feedback-error').textContent = '';
+    document.getElementById('feedback-submit-btn').textContent = 'Submit Feedback';
+    document.getElementById('feedback-submit-btn').disabled = false;
+  }
+}
+
+function submitFeedback() {
+  var text = document.getElementById('feedback-text').value.trim();
+  var errEl = document.getElementById('feedback-error');
+  if (!text) { errEl.textContent = 'Please write your feedback before submitting.'; return; }
+
+  var name  = localStorage.getItem('pw_user_name')  || 'Guest';
+  var email = localStorage.getItem('pw_user_email') || '';
+  var ts    = getTimestamp();
+
+  var feedback = [];
+  try { feedback = JSON.parse(localStorage.getItem('pw_feedback') || '[]'); } catch(e){}
+  feedback.unshift({ name: name, email: email, text: text, time: ts });
+  localStorage.setItem('pw_feedback', JSON.stringify(feedback));
+
+  var btn = document.getElementById('feedback-submit-btn');
+  btn.textContent = '✓ Feedback Submitted!';
+  btn.disabled = true;
+  btn.style.background = '#2d7a2d';
+  setTimeout(toggleFeedbackModal, 1200);
+}
+
+function sendQ() {
+  var inp = document.getElementById('qa-input');
+  var text = inp.value.trim();
+  if (!text) return;
+
+  var name  = localStorage.getItem('pw_user_name')  || 'Guest';
+  var email = localStorage.getItem('pw_user_email') || '';
+  var ts    = getTimestamp();
+
+  // Save to localStorage for admin panel
+  var qs = [];
+  try { qs = JSON.parse(localStorage.getItem('pw_questions') || '[]'); } catch(e){}
+  qs.unshift({ name: name, email: email, text: text, time: ts });
+  localStorage.setItem('pw_questions', JSON.stringify(qs));
+
+  // Persist the question to the database (questions table)
+  fetch('/api/save-question.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: name, email: email, question: text })
+  }).catch(function(err){ console.error('save-question failed:', err); });
+
+  // Show in UI
+  var list = document.getElementById('qa-list');
+  if (list) {
+    var div = document.createElement('div');
+    div.className = 'qa-msg';
+    div.innerHTML = '<div class="qa-name">' + name + ' <span style="color:#aaa;font-weight:400;font-size:.68rem;">' + ts + '</span></div>'
+                  + '<div class="qa-text">' + text.replace(/</g,'&lt;') + '</div>';
+    list.insertBefore(div, list.firstChild);
+  }
+  inp.value = '';
+}
+
+/* ── PHOTO BOOTH ── */
+var pbStream = null;
+var pbFrame = new Image();
+pbFrame.src = '/assets/images/01 tr.png';
+
+function startPhotoBooth() {
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    document.getElementById('pb-placeholder').innerHTML =
+      '<i class="bi bi-camera-video-off"></i><p>Camera not supported on this device/browser.</p>';
+    return;
+  }
+  navigator.mediaDevices.getUserMedia({ video: true })
+    .then(function(stream) {
+      pbStream = stream;
+      var video = document.getElementById('pb-video');
+      video.srcObject = stream;
+      video.style.display = 'block';
+      document.getElementById('pb-placeholder').style.display = 'none';
+      document.getElementById('pb-start-btn').style.display = 'none';
+      document.getElementById('pb-capture-btn').style.display = 'block';
+    })
+    .catch(function() {
+      document.getElementById('pb-placeholder').innerHTML =
+        '<i class="bi bi-camera-video-off"></i><p>Camera access was denied.<br>Please allow camera permission and try again.</p>';
+    });
+}
+
+function capturePhoto() {
+  if (!pbStream) return;
+  var video = document.getElementById('pb-video');
+  var canvas = document.getElementById('pb-canvas');
+  var img = document.getElementById('pb-photo');
+  
+  // Make canvas the exact frame size (1080x1080) for best quality
+  canvas.width = 1080;
+  canvas.height = 1080;
+  var ctx = canvas.getContext('2d');
+  
+  // Fill with a black background
+  ctx.fillStyle = "#000000";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Define photo zone (percentage values you can adjust)
+  const PHOTO_TOP_PERCENT = 20;    // Adjust up/down
+  const PHOTO_LEFT_PERCENT = 0;    // Adjust left/right
+  const PHOTO_WIDTH_PERCENT = 100; // Adjust width
+  const PHOTO_HEIGHT_PERCENT = 60; // Adjust height
+  
+  const photoZoneX = canvas.width * (PHOTO_LEFT_PERCENT / 100);
+  const photoZoneY = canvas.height * (PHOTO_TOP_PERCENT / 100);
+  const photoZoneW = canvas.width * (PHOTO_WIDTH_PERCENT / 100);
+  const photoZoneH = canvas.height * (PHOTO_HEIGHT_PERCENT / 100);
+  
+  // Calculate how to draw video into photo zone (object-fit: cover)
+  const vRatio = video.videoWidth / video.videoHeight;
+  const zoneRatio = photoZoneW / photoZoneH;
+  
+  let drawW, drawH, drawX, drawY;
+  
+  if (vRatio > zoneRatio) {
+    // Video is wider: fit height of zone
+    drawH = photoZoneH;
+    drawW = drawH * vRatio;
+    drawX = photoZoneX + (photoZoneW - drawW) / 2;
+    drawY = photoZoneY;
+  } else {
+    // Video is taller: fit width of zone
+    drawW = photoZoneW;
+    drawH = drawW / vRatio;
+    drawX = photoZoneX;
+    drawY = photoZoneY + (photoZoneH - drawH) / 2;
+  }
+  
+  // Flip and draw correctly!
+  ctx.save();
+  // Step 1: Move origin to right edge to flip
+  ctx.translate(canvas.width, 0);
+  // Step 2: Flip horizontally
+  ctx.scale(-1, 1);
+  // Step3: Draw at flipped position (calculated from new origin)
+  ctx.drawImage(
+    video,
+    drawX,
+    drawY,
+    drawW,
+    drawH
+  );
+  ctx.restore();
+  
+  // Draw the frame on top
+  if (pbFrame.complete) {
+    ctx.drawImage(pbFrame, 0, 0, canvas.width, canvas.height);
+    finishCapture(img, video, canvas);
+  } else {
+    pbFrame.onload = function() {
+      ctx.drawImage(pbFrame, 0, 0, canvas.width, canvas.height);
+      finishCapture(img, video, canvas);
+    };
+  }
+}
+
+function resetSelfieBooth() {
+  // Stop camera stream if active
+  if (pbStream) {
+    pbStream.getTracks().forEach(track => track.stop());
+    pbStream = null;
+  }
+  // Reset all elements to initial state
+  const video = document.getElementById('pb-video');
+  const img = document.getElementById('pb-photo');
+  video.style.display = 'none';
+  img.style.display = 'none';
+  img.src = '';
+  document.getElementById('pb-frame-overlay').style.display = 'block';
+  document.getElementById('pb-placeholder').style.display = 'flex';
+  document.getElementById('pb-start-btn').style.display = 'block';
+  document.getElementById('pb-capture-btn').style.display = 'none';
+  document.getElementById('pb-retake-btn').style.display = 'none';
+  document.getElementById('pb-download-btn').style.display = 'none';
+}
+
+function finishCapture(img, video, canvas) {
+  img.src = canvas.toDataURL('image/png');
+  img.style.display = 'block';
+  video.style.display = 'none';
+  document.getElementById('pb-frame-overlay').style.display = 'none';
+  document.getElementById('pb-capture-btn').style.display = 'none';
+  document.getElementById('pb-retake-btn').style.display = 'block';
+  document.getElementById('pb-download-btn').style.display = 'block';
+}
+
+function retakePhoto() {
+  var video = document.getElementById('pb-video');
+  var img = document.getElementById('pb-photo');
+  img.style.display = 'none';
+  video.style.display = 'block';
+  document.getElementById('pb-frame-overlay').style.display = 'block';
+  document.getElementById('pb-capture-btn').style.display = 'block';
+  document.getElementById('pb-retake-btn').style.display = 'none';
+  document.getElementById('pb-download-btn').style.display = 'none';
+}
+
+function downloadPhoto() {
+  var img = document.getElementById('pb-photo');
+  var btn = document.getElementById('pb-download-btn');
+  var originalText = btn ? btn.textContent : '';
+  if (btn) { btn.textContent = 'Saving…'; btn.disabled = true; }
+
+  // Upload to server (saves file to /public/uploads/selfies and records in DB)
+  fetch('/api/save-selfie.php', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ image: img.src })
+  }).then(function(response) {
+    return response.json();
+  }).then(function(data) {
+    if (btn) { btn.textContent = originalText; btn.disabled = false; }
+    if (data && data.success) {
+      alert('Selfie saved successfully!');
+    } else {
+      alert('Could not save selfie: ' + ((data && data.error) || 'unknown error'));
+    }
+  }).catch(function(err) {
+    if (btn) { btn.textContent = originalText; btn.disabled = false; }
+    console.error('Upload error:', err);
+    alert('Could not save selfie (network error).');
+  });
+
+  // Also download a local copy for the user
+  var a = document.createElement('a');
+  a.href = img.src;
+  a.download = 'webcast-photo-' + Date.now() + '.png';
+  a.click();
+}
+
+function stopPhotoBooth() {
+  if (pbStream) {
+    pbStream.getTracks().forEach(function(t) { t.stop(); });
+    pbStream = null;
+  }
+}
+
+function startQuiz() {
+  document.getElementById('quiz-info-view').style.display = 'none';
+  document.getElementById('quiz-question-view').style.display = 'block';
+}
+
+function approveQ(btn) {
+  const span = btn.closest('tr').querySelector('span');
+  span.className = 'badge-approved';
+  span.textContent = 'Approved';
+  btn.remove();
+}
+
+function genReport() {
+  const tbody = document.getElementById('reports-tbody');
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>Custom Report</td><td>Oncology Summit 2024</td><td>Just now</td><td><span class="badge-pending">Generating…</span></td><td>—</td>`;
+  tbody.insertBefore(row, tbody.firstChild);
+  setTimeout(() => {
+    row.querySelector('span').className = 'badge-approved';
+    row.querySelector('span').textContent = 'Ready';
+    row.querySelector('td:last-child').innerHTML = '<button class="btn-dl"><i class="bi bi-download"></i>CSV</button>';
+  }, 2000);
+}
+
+function rate(star, n) {
+  const stars = star.closest('.star-row').querySelectorAll('.star-btn');
+  stars.forEach((s,i) => s.classList.toggle('on', i < n));
+}
+function rate2(star, n) { rate(star, n); }
+</script>
+</body>
+</html>

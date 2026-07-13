@@ -1,0 +1,120 @@
+/* ============================================================
+   Auth pages — login, register, forgot/reset password
+   Shared stylesheet for all pages in app/Views/auth/
+   ============================================================ */
+
+/* ── Page wrapper ─────────────────────────────────────────── */
+.auth-page {
+    background: var(--auth-bg, #f0f4ff);
+    min-height: 100vh;
+}
+
+.auth-wrap {
+    min-height: calc(100vh - 72px);   /* subtract navbar height */
+    padding: 2rem 1rem;
+}
+
+/* ── Card container ───────────────────────────────────────── */
+.auth-card-outer {
+    width: 100%;
+    max-width: 440px;
+}
+
+.auth-card {
+    border-radius: 1rem;
+}
+
+/* ── Branding ─────────────────────────────────────────────── */
+.auth-logo-link {
+    text-decoration: none;
+}
+
+/* ── Input group icons ────────────────────────────────────── */
+.auth-input-icon {
+    background: transparent;
+    color: #6b7280;
+    border-right: 0;
+}
+
+/* Keep left border visible when input is focused */
+.input-group:focus-within .auth-input-icon {
+    border-color: #86b7fe;   /* Bootstrap's focus ring colour */
+    color: #1a56db;
+}
+
+/* Remove left border on the input so icon and input look joined */
+.auth-input-icon + .form-control {
+    border-left: 0;
+}
+
+/* Restore border when invalid */
+.auth-input-icon + .form-control.is-invalid {
+    border-left: 0;
+}
+
+.auth-input-icon + .form-control:focus {
+    box-shadow: none;   /* avoid double outline; outer group handles it */
+}
+
+/* ── Password toggle button ───────────────────────────────── */
+.auth-password-toggle {
+    border-color: #dee2e6;
+    background: transparent;
+    color: #6b7280;
+}
+
+.auth-password-toggle:hover {
+    background: #f8f9fa;
+    color: #374151;
+}
+
+/* ── Forgot password link ─────────────────────────────────── */
+.auth-forgot-link {
+    text-decoration: none;
+    font-size: .8125rem;
+}
+
+.auth-forgot-link:hover {
+    text-decoration: underline;
+}
+
+/* ── Divider ─────────────────────────────────────────────── */
+.auth-divider {
+    position: relative;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 42%;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.auth-divider::before { left: 0; }
+.auth-divider::after  { right: 0; }
+
+/* ── Alert refinements ────────────────────────────────────── */
+.auth-card .alert {
+    font-size: .875rem;
+}
+
+/* ── Mobile ──────────────────────────────────────────────── */
+@media (max-width: 575.98px) {
+    .auth-card .card-body {
+        padding: 1.75rem 1.25rem !important;
+    }
+
+    .auth-wrap {
+        padding: 1rem .75rem;
+    }
+}
+
+/* ── Reduce motion ────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+    .auth-card {
+        transition: none;
+    }
+}

@@ -1,0 +1,42 @@
+/* ============================================================
+   Registration — form, confirm, and pending pages
+   ============================================================ */
+
+.registration-page {
+    background-color: var(--bs-gray-100, #f3f4f6);
+    min-height: 100vh;
+}
+
+/* ── Card polish ── */
+.registration-page .card {
+    border-radius: .75rem;
+}
+
+/* ── Attendee ID display ── */
+.attendee-id {
+    font-family: 'Courier New', Courier, monospace;
+    letter-spacing: .15em;
+}
+
+/* ── Field labels ── */
+.form-label.fw-medium {
+    font-size: .875rem;
+    margin-bottom: .35rem;
+}
+
+/* ── Tracking utility (heading subtitles) ── */
+.tracking-wider {
+    letter-spacing: .08em;
+}
+
+/* ── Consent checkbox area ── */
+.form-check-label {
+    line-height: 1.5;
+}
+
+/* ── Mobile adjustments ── */
+@media (max-width: 575.98px) {
+    .registration-page .card-body {
+        padding: 1.5rem !important;
+    }
+}

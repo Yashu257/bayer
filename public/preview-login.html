@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Preview — PharmaWebcast</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+        crossorigin="anonymous"
+    >
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <style>
+        /* ── Page ── */
+        body {
+            background: #f0f4ff;
+            min-height: 100vh;
+        }
+
+        /* ── Minimal navbar replica ── */
+        .demo-nav {
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: .75rem 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .demo-nav .brand {
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-decoration: none;
+            color: #111827;
+        }
+        .demo-nav .brand span { color: #1a56db; }
+
+        /* ── Auth wrap ── */
+        .auth-wrap {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: calc(100vh - 56px);
+            padding: 2rem 1rem;
+        }
+
+        .auth-card-outer {
+            width: 100%;
+            max-width: 440px;
+        }
+
+        .auth-card {
+            border-radius: 1rem;
+        }
+
+        /* ── Input icon group ── */
+        .auth-input-icon {
+            background: transparent;
+            color: #6b7280;
+            border-right: 0;
+        }
+        .input-group:focus-within .auth-input-icon {
+            border-color: #86b7fe;
+            color: #1a56db;
+        }
+        .auth-input-icon + .form-control {
+            border-left: 0;
+        }
+        .auth-input-icon + .form-control:focus {
+            box-shadow: none;
+        }
+
+        /* ── Toggle ── */
+        .auth-password-toggle {
+            border-color: #dee2e6;
+            background: transparent;
+            color: #6b7280;
+        }
+        .auth-password-toggle:hover {
+            background: #f8f9fa;
+            color: #374151;
+        }
+
+        /* ── Forgot link ── */
+        .auth-forgot-link {
+            font-size: .8125rem;
+            text-decoration: none;
+            color: #6b7280;
+        }
+        .auth-forgot-link:hover { text-decoration: underline; }
+
+        /* ── Divider ── */
+        .auth-divider {
+            position: relative;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .auth-divider::before,
+        .auth-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 42%;
+            height: 1px;
+            background: #e5e7eb;
+        }
+        .auth-divider::before { left: 0; }
+        .auth-divider::after  { right: 0; }
+
+        /* ── Demo error states ── */
+        .demo-state-tabs {
+            display: flex;
+            gap: .5rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        .demo-state-tabs button {
+            border: 1px solid #dee2e6;
+            background: #fff;
+            border-radius: .5rem;
+            padding: .35rem .9rem;
+            font-size: .8rem;
+            cursor: pointer;
+            color: #374151;
+            transition: all .15s;
+        }
+        .demo-state-tabs button.active {
+            background: #1a56db;
+            border-color: #1a56db;
+            color: #fff;
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 575.98px) {
+            .auth-card .card-body { padding: 1.75rem 1.25rem !important; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar replica -->
+<nav class="demo-nav">
+    <a href="#" class="brand"><span>Pharma</span>Webcast</a>
+    <div class="d-flex gap-2">
+        <a href="#" class="btn btn-sm btn-outline-secondary">Register</a>
+        <a href="#" class="btn btn-sm btn-primary">Sign In</a>
+    </div>
+</nav>
+
+<!-- State switcher (demo only) -->
+<div class="pt-4">
+    <div class="demo-state-tabs">
+        <button class="active" onclick="showState('default', this)">Default</button>
+        <button onclick="showState('auth-error', this)">Auth Error</button>
+        <button onclick="showState('validation', this)">Validation Error</button>
+    </div>
+</div>
+
+<!-- ── Auth card ── -->
+<div class="auth-wrap" style="min-height: calc(100vh - 120px); padding-top: 0;">
+    <div class="auth-card-outer">
+
+        <!-- Branding -->
+        <div class="text-center mb-4">
+            <a href="#" style="text-decoration:none;">
+                <span class="fw-bold text-primary fs-4">Pharma<span class="text-dark">Webcast</span></span>
+            </a>
+        </div>
+
+        <div class="card auth-card shadow-sm border-0">
+            <div class="card-body p-4 p-sm-5">
+
+                <h1 class="h4 fw-bold mb-1">Welcome back</h1>
+                <p class="text-muted small mb-4">Sign in to access your events.</p>
+
+                <!-- Auth error banner -->
+                <div id="banner-auth-error" class="alert alert-danger d-none align-items-center gap-2 py-2" role="alert">
+                    <i class="bi bi-shield-exclamation flex-shrink-0"></i>
+                    <span>Invalid email or password. Please try again.</span>
+                </div>
+
+                <!-- Validation error banner -->
+                <div id="banner-validation" class="alert alert-warning d-none align-items-center gap-2 py-2" role="alert">
+                    <i class="bi bi-exclamation-triangle flex-shrink-0"></i>
+                    <span>Please correct the errors below.</span>
+                </div>
+
+                <!-- Form -->
+                <form novalidate autocomplete="on" onsubmit="return false;">
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-medium">Email address</label>
+                        <div class="input-group">
+                            <span class="input-group-text auth-input-icon">
+                                <i class="bi bi-envelope"></i>
+                            </span>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                class="form-control"
+                                placeholder="you@example.com"
+                                autocomplete="email"
+                                autofocus
+                            >
+                        </div>
+                        <div id="email-error" class="invalid-feedback d-none">
+                            Please enter a valid email address.
+                        </div>
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-baseline mb-1">
+                            <label for="password" class="form-label fw-medium mb-0">Password</label>
+                            <a href="#" class="auth-forgot-link">Forgot password?</a>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text auth-input-icon">
+                                <i class="bi bi-lock"></i>
+                            </span>
+                            <input
+                                type="password"
+                                id="password"
+                                name="password"
+                                class="form-control"
+                                placeholder="••••••••"
+                                autocomplete="current-password"
+                            >
+                            <button
+                                type="button"
+                                class="btn btn-outline-secondary auth-password-toggle"
+                                aria-label="Toggle password visibility"
+                                id="toggle-pw"
+                            >
+                                <i class="bi bi-eye" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div id="password-error" class="invalid-feedback d-none">
+                            Password is required.
+                        </div>
+                    </div>
+
+                    <!-- Remember me -->
+                    <div class="mb-4">
+                        <div class="form-check mb-0">
+                            <input type="checkbox" id="remember_me" name="remember_me" value="1" class="form-check-input">
+                            <label for="remember_me" class="form-check-label small text-muted">
+                                Remember me for 30 days
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg fw-semibold">
+                            <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                        </button>
+                    </div>
+
+                </form>
+
+                <!-- Divider -->
+                <div class="auth-divider">
+                    <span class="text-muted small">or</span>
+                </div>
+
+                <!-- Register CTA -->
+                <p class="text-center text-muted small mb-0">
+                    Not registered yet?
+                    <a href="#" class="fw-medium">Create an account</a>
+                </p>
+
+            </div>
+        </div>
+
+        <!-- Footer note -->
+        <p class="text-center text-muted mt-4 mb-0" style="font-size:.75rem;">
+            By signing in you agree to our
+            <a href="#" class="text-muted text-decoration-underline">Terms of Use</a>
+            and
+            <a href="#" class="text-muted text-decoration-underline">Privacy Policy</a>.
+        </p>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" defer></script>
+<script>
+    function hide(el) { el.classList.add('d-none'); el.classList.remove('d-flex'); }
+    function show(el) { el.classList.remove('d-none'); el.classList.add('d-flex'); }
+
+    function showState(state, btn) {
+        document.querySelectorAll('.demo-state-tabs button').forEach(function(b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+
+        var emailInput = document.getElementById('email');
+        var emailErr   = document.getElementById('email-error');
+        var pwErr      = document.getElementById('password-error');
+        var authBanner = document.getElementById('banner-auth-error');
+        var valBanner  = document.getElementById('banner-validation');
+
+        // Reset all to clean state
+        emailInput.classList.remove('is-invalid');
+        emailInput.value = '';
+        hide(emailErr);
+        hide(pwErr);
+        hide(authBanner);
+        hide(valBanner);
+
+        if (state === 'auth-error') {
+            show(authBanner);
+            emailInput.value = 'doctor@hospital.com';
+        } else if (state === 'validation') {
+            show(valBanner);
+            emailInput.classList.add('is-invalid');
+            show(emailErr);
+            show(pwErr);
+        }
+    }
+
+    // Password toggle
+    document.getElementById('toggle-pw').addEventListener('click', function () {
+        var input = document.getElementById('password');
+        var icon  = this.querySelector('i');
+        if (input.type === 'password') {
+            input.type = 'text';
+            icon.classList.replace('bi-eye', 'bi-eye-slash');
+            this.setAttribute('aria-label', 'Hide password');
+        } else {
+            input.type = 'password';
+            icon.classList.replace('bi-eye-slash', 'bi-eye');
+            this.setAttribute('aria-label', 'Show password');
+        }
+    });
+</script>
+</body>
+</html>

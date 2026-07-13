@@ -1,0 +1,417 @@
+/* ============================================================
+   Webcast Room — full-viewport layout
+   Applies only to pages with <body class="webcast-body">
+   ============================================================ */
+
+/* ── Reset & full-height shell ── */
+html.webcast-html,
+.webcast-body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: #0d1117;
+    color: #e6edf3;
+}
+
+/* ── Top bar ── */
+.wc-topbar {
+    height: 52px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    flex-shrink: 0;
+    gap: .75rem;
+    z-index: 100;
+}
+
+.wc-topbar-title {
+    font-size: .9375rem;
+    font-weight: 600;
+    color: #e6edf3;
+    max-width: 480px;
+}
+
+/* ── Live badge ── */
+.wc-live-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: #da3633;
+    color: #fff;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    padding: 3px 8px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.wc-live-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #fff;
+    animation: wc-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes wc-pulse {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: .3; }
+}
+
+/* ── Attendee chip ── */
+.wc-attendee-chip {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: .8125rem;
+    color: #8b949e;
+    gap: 5px;
+}
+
+/* ── Top-bar buttons ── */
+.wc-feedback-btn,
+.wc-leave-btn {
+    font-size: .8125rem;
+}
+
+/* ── Room layout: video | sidebar ── */
+.wc-room {
+    display: flex;
+    height: calc(100vh - 52px);
+    overflow: hidden;
+}
+
+/* ── Player pane ── */
+.wc-player-pane {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    overflow: hidden;
+}
+
+.wc-player-wrap {
+    flex: 1 1 auto;
+    position: relative;
+    background: #000;
+    overflow: hidden;
+}
+
+/* Aspect-ratio wrapper for the iframe/video */
+.wc-player-wrap iframe,
+.wc-player-wrap video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+}
+
+/* ── Placeholder (shown before JS loads or if no stream) ── */
+.wc-placeholder {
+    position: absolute;
+    inset: 0;
+    background: #0d1117;
+    color: #8b949e;
+    text-align: center;
+}
+
+.wc-placeholder-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: #21262d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wc-placeholder-icon .bi {
+    font-size: 2rem;
+    color: #58a6ff;
+}
+
+.wc-placeholder p { color: #e6edf3; }
+
+/* ── Below-player footer strip ── */
+.wc-player-footer {
+    background: #161b22;
+    border-top: 1px solid #30363d;
+    color: #8b949e;
+    flex-shrink: 0;
+    min-height: 42px;
+}
+
+/* ── Sidebar ── */
+.wc-sidebar {
+    width: 360px;
+    flex-shrink: 0;
+    background: #161b22;
+    border-left: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* ── Sidebar tabs ── */
+.wc-sidebar-tabs {
+    border-bottom: 1px solid #30363d;
+    background: #161b22;
+    flex-shrink: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+
+.wc-sidebar-tabs::-webkit-scrollbar { display: none; }
+
+.wc-sidebar-tabs .nav-link {
+    border: 0;
+    border-bottom: 2px solid transparent;
+    border-radius: 0;
+    color: #8b949e;
+    font-size: .8125rem;
+    padding: .625rem .875rem;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+}
+
+.wc-sidebar-tabs .nav-link:hover {
+    color: #e6edf3;
+    border-color: #444c56;
+}
+
+.wc-sidebar-tabs .nav-link.active {
+    background: transparent;
+    color: #58a6ff;
+    border-bottom-color: #58a6ff;
+}
+
+/* ── Sidebar content area ── */
+.wc-sidebar-content {
+    flex: 1 1 auto;
+    overflow: hidden;
+    min-height: 0;
+}
+
+.wc-sidebar-content .tab-pane {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ── Q&A list ── */
+.wc-qa-list {
+    overflow-y: auto;
+    padding: .75rem;
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+/* Individual question card */
+.wc-question {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: .625rem .875rem;
+    font-size: .8125rem;
+}
+
+.wc-question-text {
+    color: #e6edf3;
+    margin-bottom: .35rem;
+    line-height: 1.45;
+}
+
+.wc-question-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: #8b949e;
+    font-size: .75rem;
+}
+
+.wc-question.answered {
+    border-color: #238636;
+    background: #0f1f0f;
+}
+
+.wc-question.answered .wc-question-text {
+    color: #7ee787;
+}
+
+.wc-upvote {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    border: 0;
+    background: transparent;
+    color: #8b949e;
+    font-size: .75rem;
+    padding: 0;
+    cursor: pointer;
+    transition: color .15s;
+}
+
+.wc-upvote:hover { color: #58a6ff; }
+.wc-upvote.voted  { color: #58a6ff; }
+
+/* ── Q&A submit form ── */
+.wc-qa-form {
+    flex-shrink: 0;
+    background: #161b22;
+}
+
+.wc-qa-form textarea {
+    background: #0d1117;
+    border-color: #30363d;
+    color: #e6edf3;
+    font-size: .8125rem;
+    resize: none;
+}
+
+.wc-qa-form textarea::placeholder { color: #6e7681; }
+
+.wc-qa-form textarea:focus {
+    background: #0d1117;
+    border-color: #58a6ff;
+    box-shadow: 0 0 0 3px rgba(88,166,255,.2);
+    color: #e6edf3;
+}
+
+/* ── Poll ── */
+#poll-options .form-check {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: .5rem .75rem .5rem 2.25rem;
+    margin-bottom: .5rem;
+    transition: border-color .15s;
+}
+
+#poll-options .form-check:hover {
+    border-color: #58a6ff;
+}
+
+#poll-options .form-check-input:checked ~ .form-check-label {
+    color: #58a6ff;
+}
+
+.wc-poll-bar {
+    margin-bottom: .5rem;
+}
+
+.wc-poll-bar-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: .8rem;
+    color: #8b949e;
+    margin-bottom: 3px;
+}
+
+.wc-poll-bar-track {
+    height: 6px;
+    background: #21262d;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.wc-poll-bar-fill {
+    height: 100%;
+    background: #58a6ff;
+    border-radius: 3px;
+    transition: width .5s ease;
+}
+
+/* ── Quiz card ── */
+#quiz-card {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* ── Announcements ── */
+.wc-announcement {
+    background: #21262d;
+    border: 1px solid #30363d;
+    border-left: 3px solid #f0883e;
+    border-radius: 6px;
+    padding: .625rem .875rem;
+    margin-bottom: .5rem;
+    font-size: .8125rem;
+    color: #e6edf3;
+}
+
+.wc-announcement-time {
+    font-size: .75rem;
+    color: #8b949e;
+    margin-top: .25rem;
+}
+
+/* ── Empty states ── */
+.wc-empty-state { color: #6e7681; }
+
+/* ── Scrollbar theming (sidebar panels) ── */
+.wc-qa-list,
+#poll-container,
+#quiz-container,
+#announce-list {
+    scrollbar-width: thin;
+    scrollbar-color: #30363d transparent;
+}
+
+.wc-qa-list::-webkit-scrollbar,
+#poll-container::-webkit-scrollbar,
+#quiz-container::-webkit-scrollbar,
+#announce-list::-webkit-scrollbar { width: 4px; }
+
+.wc-qa-list::-webkit-scrollbar-thumb,
+#poll-container::-webkit-scrollbar-thumb,
+#quiz-container::-webkit-scrollbar-thumb,
+#announce-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 2px; }
+
+/* ── Dark Bootstrap overrides ── */
+.wc-sidebar .form-control,
+.wc-sidebar .form-select { background: #0d1117; color: #e6edf3; border-color: #30363d; }
+.wc-sidebar .btn-primary  { background: #238636; border-color: #2ea043; }
+.wc-sidebar .btn-primary:hover { background: #2ea043; }
+
+/* ── Mobile — stacked layout ── */
+@media (max-width: 767.98px) {
+    html.webcast-html,
+    .webcast-body { overflow: auto; }
+
+    .wc-room {
+        flex-direction: column;
+        height: auto;
+        overflow: visible;
+    }
+
+    .wc-player-pane {
+        flex: none;
+        height: auto;
+    }
+
+    .wc-player-wrap {
+        flex: none;
+        aspect-ratio: 16 / 9;
+        position: relative;
+    }
+
+    .wc-sidebar {
+        width: 100%;
+        border-left: 0;
+        border-top: 1px solid #30363d;
+        height: 480px;
+    }
+
+    .wc-topbar-title { font-size: .875rem; }
+}
+
+/* ── Prefers reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+    .wc-live-dot { animation: none; opacity: 1; }
+}

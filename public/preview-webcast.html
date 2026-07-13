@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" class="webcast-html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webcast Room Preview — PharmaWebcast</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="/assets/css/webcast.css">
+</head>
+<body class="webcast-body">
+
+<!-- ── TOP BAR ───────────────────────────────────────────────────────────── -->
+<header class="wc-topbar d-flex align-items-center justify-content-between px-3 px-md-4">
+    <div class="d-flex align-items-center gap-3 min-w-0">
+        <span class="wc-live-badge">
+            <span class="wc-live-dot"></span>LIVE
+        </span>
+        <h1 class="wc-topbar-title text-truncate mb-0">
+            International Oncology Symposium 2025
+        </h1>
+    </div>
+    <div class="d-flex align-items-center gap-2 flex-shrink-0">
+        <span class="wc-attendee-chip d-none d-md-inline-flex align-items-center gap-1">
+            <i class="bi bi-person-circle"></i>
+            <span>Dr. Sarah Johnson</span>
+        </span>
+        <a href="#" class="btn btn-sm btn-outline-warning wc-feedback-btn">
+            <i class="bi bi-star me-1"></i><span class="d-none d-sm-inline">Feedback</span>
+        </a>
+        <button class="btn btn-sm btn-outline-secondary wc-leave-btn">
+            <i class="bi bi-box-arrow-right me-1"></i><span class="d-none d-sm-inline">Leave</span>
+        </button>
+    </div>
+</header>
+
+<!-- ── MAIN ROOM ─────────────────────────────────────────────────────────── -->
+<div class="wc-room">
+
+    <!-- Video pane -->
+    <main class="wc-player-pane">
+        <div id="stream-player" class="wc-player-wrap">
+            <div id="stream-placeholder" class="wc-placeholder d-flex flex-column align-items-center justify-content-center">
+                <div class="wc-placeholder-icon mb-3">
+                    <i class="bi bi-broadcast"></i>
+                </div>
+                <p class="fw-semibold mb-1">Live stream</p>
+                <p class="text-muted small mb-0">The stream will appear here momentarily.</p>
+                <div class="mt-4 d-flex gap-2 flex-wrap justify-content-center">
+                    <button class="btn btn-sm btn-outline-secondary" onclick="demoPlayer('placeholder')">Placeholder</button>
+                    <button class="btn btn-sm btn-outline-primary"   onclick="demoPlayer('vimeo')">Vimeo</button>
+                    <button class="btn btn-sm btn-outline-danger"    onclick="demoPlayer('youtube')">YouTube</button>
+                    <button class="btn btn-sm btn-outline-warning"   onclick="demoPlayer('wowza')">Wowza HLS</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="wc-player-footer d-flex align-items-center justify-content-between px-3 py-2">
+            <span class="small text-muted">
+                <i class="bi bi-ticket-perforated me-1"></i>PW-2025-000042
+            </span>
+        </div>
+    </main>
+
+    <!-- Sidebar -->
+    <aside class="wc-sidebar">
+
+        <ul class="nav nav-tabs wc-sidebar-tabs" id="sidebarTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#pane-qa" type="button">
+                    <i class="bi bi-chat-square-text me-1"></i>Q&amp;A
+                    <span class="badge bg-primary ms-1">3</span>
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pane-poll" type="button">
+                    <i class="bi bi-bar-chart me-1"></i>Poll
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pane-quiz" type="button">
+                    <i class="bi bi-patch-question me-1"></i>Quiz
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" data-bs-toggle="tab" data-bs-target="#pane-announce" type="button">
+                    <i class="bi bi-megaphone me-1"></i>
+                    <span class="d-none d-xl-inline">Announcements</span>
+                    <span class="d-xl-none">Info</span>
+                    <span class="badge bg-danger ms-1">!</span>
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content wc-sidebar-content">
+
+            <!-- Q&A -->
+            <div class="tab-pane fade show active h-100 d-flex flex-column" id="pane-qa">
+                <div class="wc-qa-list flex-grow-1" id="qa-list">
+
+                    <div class="wc-question answered">
+                        <p class="wc-question-text mb-1">What are the latest biomarker findings for targeted therapy resistance?</p>
+                        <div class="wc-question-meta">
+                            <span>Dr. Patel</span>
+                            <span class="d-flex align-items-center gap-2">
+                                <span class="text-success small"><i class="bi bi-check-circle-fill me-1"></i>Answered</span>
+                                <button class="wc-upvote voted"><i class="bi bi-chevron-up"></i><span class="upvote-count">14</span></button>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="wc-question">
+                        <p class="wc-question-text mb-1">How does the new combination therapy compare to standard of care in terms of overall survival?</p>
+                        <div class="wc-question-meta">
+                            <span>Attendee</span>
+                            <span><button class="wc-upvote"><i class="bi bi-chevron-up"></i><span class="upvote-count">9</span></button></span>
+                        </div>
+                    </div>
+
+                    <div class="wc-question">
+                        <p class="wc-question-text mb-1">Are the trial results applicable to patients with prior platinum-based treatment?</p>
+                        <div class="wc-question-meta">
+                            <span>Dr. Nguyen</span>
+                            <span><button class="wc-upvote"><i class="bi bi-chevron-up"></i><span class="upvote-count">6</span></button></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="wc-qa-form border-top p-3">
+                    <form onsubmit="return false;">
+                        <div class="mb-2">
+                            <textarea class="form-control form-control-sm" rows="2" maxlength="400"
+                                      placeholder="Ask a question…" id="qa-input-preview"></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-muted" style="font-size:.75rem;"><span id="qa-char-preview">400</span> chars left</span>
+                            <button class="btn btn-primary btn-sm px-3">
+                                <i class="bi bi-send me-1"></i>Send
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Poll -->
+            <div class="tab-pane fade h-100 d-flex flex-column" id="pane-poll">
+                <div class="flex-grow-1 overflow-auto p-3">
+                    <p class="fw-semibold mb-3">Which treatment approach shows the most promise for stage III NSCLC?</p>
+                    <div id="poll-form-demo">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="poll_demo" id="opt1">
+                            <label class="form-check-label" for="opt1">Immunotherapy alone</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="poll_demo" id="opt2">
+                            <label class="form-check-label" for="opt2">Chemoimmunotherapy combination</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="poll_demo" id="opt3">
+                            <label class="form-check-label" for="opt3">Targeted therapy (biomarker-selected)</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="poll_demo" id="opt4">
+                            <label class="form-check-label" for="opt4">Surgery + adjuvant therapy</label>
+                        </div>
+                        <button class="btn btn-primary btn-sm w-100 mt-3" onclick="showDemoPollResults()">
+                            <i class="bi bi-check2-circle me-1"></i>Submit Vote
+                        </button>
+                    </div>
+                    <div id="poll-results-demo" style="display:none;">
+                        <p class="text-success small text-center mb-3">
+                            <i class="bi bi-check-circle-fill me-1"></i>Vote recorded!
+                        </p>
+                        <div class="wc-poll-bar">
+                            <div class="wc-poll-bar-label"><span>Immunotherapy alone</span><span>18%</span></div>
+                            <div class="wc-poll-bar-track"><div class="wc-poll-bar-fill" style="width:18%"></div></div>
+                        </div>
+                        <div class="wc-poll-bar">
+                            <div class="wc-poll-bar-label"><span>Chemoimmunotherapy combination</span><span>47%</span></div>
+                            <div class="wc-poll-bar-track"><div class="wc-poll-bar-fill" style="width:47%"></div></div>
+                        </div>
+                        <div class="wc-poll-bar">
+                            <div class="wc-poll-bar-label"><span>Targeted therapy (biomarker-selected)</span><span>28%</span></div>
+                            <div class="wc-poll-bar-track"><div class="wc-poll-bar-fill" style="width:28%"></div></div>
+                        </div>
+                        <div class="wc-poll-bar">
+                            <div class="wc-poll-bar-label"><span>Surgery + adjuvant therapy</span><span>7%</span></div>
+                            <div class="wc-poll-bar-track"><div class="wc-poll-bar-fill" style="width:7%"></div></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz -->
+            <div class="tab-pane fade h-100 d-flex flex-column" id="pane-quiz">
+                <div class="flex-grow-1 overflow-auto p-3">
+                    <div id="quiz-card" style="">
+                        <div class="d-flex align-items-start gap-2 mb-3">
+                            <i class="bi bi-patch-question-fill text-primary mt-1 flex-shrink-0"></i>
+                            <div>
+                                <p class="fw-semibold mb-0">Clinical Oncology Knowledge Check</p>
+                                <p class="text-muted small mb-0">Test your understanding of today's presentations</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center gap-2 mb-3 text-muted small">
+                            <i class="bi bi-clock"></i>
+                            <span>10 min time limit &nbsp;·&nbsp; 8 questions</span>
+                        </div>
+                        <a href="#" class="btn btn-primary btn-sm w-100">
+                            <i class="bi bi-play-circle me-1"></i>Start Quiz
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements -->
+            <div class="tab-pane fade h-100 d-flex flex-column" id="pane-announce">
+                <div class="flex-grow-1 overflow-auto p-3" id="announce-list">
+                    <div class="wc-announcement">
+                        🎤 The Q&A session for Dr. Chen's presentation will begin in 5 minutes.
+                        Please submit your questions now!
+                        <div class="wc-announcement-time">14:25</div>
+                    </div>
+                    <div class="wc-announcement">
+                        📋 CME/CPD credits will be automatically credited within 48 hours of
+                        the event. Your certificate will be emailed to you.
+                        <div class="wc-announcement-time">13:02</div>
+                    </div>
+                    <div class="wc-announcement">
+                        👋 Welcome to the International Oncology Symposium 2025! We have
+                        312 attendees joined today. The session will begin shortly.
+                        <div class="wc-announcement-time">12:58</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </aside>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+<script>
+    // Demo helpers
+    function showDemoPollResults() {
+        document.getElementById('poll-form-demo').style.display  = 'none';
+        document.getElementById('poll-results-demo').style.display = '';
+    }
+
+    function demoPlayer(type) {
+        var wrap  = document.getElementById('stream-player');
+        var ph    = document.getElementById('stream-placeholder');
+
+        // Remove any existing iframe
+        wrap.querySelectorAll('iframe').forEach(function(el) { el.remove(); });
+
+        if (type === 'placeholder') {
+            ph.style.display = '';
+            return;
+        }
+
+        ph.style.display = 'none';
+
+        var iframe = document.createElement('iframe');
+        iframe.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;border:0;';
+        iframe.allowFullscreen = true;
+        iframe.allow = 'autoplay; fullscreen; picture-in-picture';
+        iframe.title = type + ' player';
+
+        if (type === 'vimeo') {
+            iframe.src = 'https://player.vimeo.com/video/76979871?autoplay=0&title=0&byline=0&portrait=0';
+        } else if (type === 'youtube') {
+            iframe.src = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=0&rel=0&modestbranding=1';
+        } else if (type === 'wowza') {
+            ph.style.display = '';
+            ph.querySelector('p.fw-semibold').textContent = 'Wowza HLS';
+            ph.querySelector('p.text-muted').textContent = 'HLS.js would mount here using your Wowza .m3u8 URL.';
+            return;
+        }
+
+        wrap.appendChild(iframe);
+    }
+
+    // Q&A char count
+    var qaInput = document.getElementById('qa-input-preview');
+    var qaCount = document.getElementById('qa-char-preview');
+    if (qaInput && qaCount) {
+        qaInput.addEventListener('input', function() {
+            qaCount.textContent = Math.max(0, 400 - qaInput.value.length);
+        });
+    }
+</script>
+</body>
+</html>

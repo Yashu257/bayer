@@ -1,0 +1,29 @@
+
+# Environment variables
+.env
+
+# Storage
+/storage/cache/*
+/storage/logs/*
+/storage/sessions/*
+/storage/temp/*
+!/storage/cache/.gitkeep
+!/storage/logs/.gitkeep
+!/storage/sessions/.gitkeep
+!/storage/temp/.gitkeep
+
+# Uploads
+/public/uploads/*
+!/public/uploads/documents/.gitkeep
+!/public/uploads/selfies/.gitkeep
+!/public/uploads/speakers/.gitkeep
+!/public/uploads/thumbnails/.gitkeep
+!/public/uploads/webcasts/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

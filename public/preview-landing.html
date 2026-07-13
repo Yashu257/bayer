@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Landing Page Preview — PharmaWebcast</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        /* ── Inline preview of app.css + landing.css ── */
+
+        :root {
+            --hero-overlay-opacity: 0.62;
+            --countdown-bg:         rgba(255,255,255,0.12);
+            --countdown-border:     rgba(255,255,255,0.22);
+            --countdown-radius:     12px;
+            --section-divider-w:    60px;
+            --section-divider-h:    4px;
+            --speaker-photo-size:   96px;
+            --agenda-number-size:   40px;
+            --transition-base:      0.25s ease;
+        }
+        html { scroll-behavior: smooth; }
+        body { font-family:'Segoe UI',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+        ::-webkit-scrollbar { width:6px; }
+        ::-webkit-scrollbar-track { background:#f1f5f9; }
+        ::-webkit-scrollbar-thumb { background:#94a3b8; border-radius:99px; }
+
+        /* NAV */
+        #mainNav {
+            position:fixed; top:0; left:0; right:0; z-index:1030;
+            padding:1rem 0;
+            background-color:transparent;
+            transition:background-color .25s, padding .25s, box-shadow .25s;
+        }
+        #mainNav.scrolled {
+            background-color:rgba(15,23,42,.95);
+            padding:.6rem 0;
+            box-shadow:0 2px 20px rgba(0,0,0,.25);
+            backdrop-filter:blur(8px);
+        }
+
+        /* HERO */
+        .hero-section {
+            position:relative;
+            min-height:100vh;
+            background-size:cover;
+            background-position:center;
+            background-repeat:no-repeat;
+            background-attachment:fixed;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding-top:100px;
+            padding-bottom:80px;
+            /* Vibrant demo gradient — replaced by admin-uploaded image in production */
+            background-image:
+                url('https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1920&q=80');
+        }
+        .hero-overlay {
+            position:absolute; inset:0;
+            background:linear-gradient(160deg,rgba(5,10,30,.75) 0%,rgba(10,20,50,.62) 100%);
+            z-index:0;
+        }
+        .hero-content { z-index:1; }
+        .hero-content h1 { text-shadow:0 2px 12px rgba(0,0,0,.5); letter-spacing:-.5px; }
+        .text-white-75 { color:rgba(255,255,255,.75)!important; }
+
+        /* BADGES */
+        .badge-upcoming {
+            background:rgba(255,255,255,.15); color:#fff;
+            border:1px solid rgba(255,255,255,.3); border-radius:50px;
+            padding:.4rem 1.1rem; font-size:.85rem; font-weight:600; letter-spacing:.5px;
+        }
+        .badge-live {
+            background:#dc3545; color:#fff; border-radius:50px;
+            padding:.4rem 1.1rem; font-size:.85rem; font-weight:600; letter-spacing:.5px;
+            animation:badge-pulse 2s infinite;
+        }
+        .live-dot {
+            display:inline-block; width:10px; height:10px;
+            background:#fff; border-radius:50%; vertical-align:middle;
+            animation:live-dot-pulse 1.2s ease-in-out infinite;
+        }
+        @keyframes live-dot-pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.3;transform:scale(.7)} }
+        @keyframes badge-pulse    { 0%,100%{box-shadow:0 0 0 0 rgba(220,53,69,.6)} 50%{box-shadow:0 0 0 8px rgba(220,53,69,0)} }
+
+        /* META CHIPS */
+        .meta-chip {
+            display:inline-flex; align-items:center;
+            background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2);
+            color:rgba(255,255,255,.9); border-radius:50px;
+            padding:.35rem 1rem; font-size:.875rem; font-weight:500;
+            backdrop-filter:blur(4px);
+        }
+
+        /* COUNTDOWN */
+        .countdown-unit {
+            background:var(--countdown-bg); border:1px solid var(--countdown-border);
+            border-radius:var(--countdown-radius); padding:.75rem 1.25rem;
+            min-width:72px; text-align:center; backdrop-filter:blur(6px);
+        }
+        .countdown-value {
+            font-size:clamp(2rem,5vw,3.25rem); font-weight:800; color:#fff;
+            line-height:1; font-variant-numeric:tabular-nums; letter-spacing:-1px;
+        }
+        .countdown-label {
+            font-size:.65rem; text-transform:uppercase; letter-spacing:1.5px;
+            color:rgba(255,255,255,.6); margin-top:.3rem; font-weight:500;
+        }
+        .countdown-separator {
+            font-size:2.5rem; font-weight:800; color:rgba(255,255,255,.4);
+            align-self:center; padding-bottom:1.2rem; user-select:none;
+        }
+        .countdown-finished .countdown-value { color:#ffd700; }
+
+        /* CTA */
+        .cta-register,.cta-login { transition:transform .25s, box-shadow .25s; }
+        .cta-register:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(13,110,253,.45); }
+        .cta-login:hover    { transform:translateY(-2px); }
+
+        /* SECTIONS */
+        .section-title { font-size:clamp(1.6rem,3vw,2.25rem); font-weight:700; color:#1a1a2e; letter-spacing:-.3px; }
+        .section-divider { width:var(--section-divider-w); height:var(--section-divider-h); background:linear-gradient(90deg,#0d6efd,#6610f2); border-radius:99px; }
+        .letter-spacing-1 { letter-spacing:1px; }
+
+        /* AGENDA */
+        .agenda-number {
+            width:40px; height:40px; min-width:40px;
+            background:linear-gradient(135deg,#0d6efd,#6610f2); color:#fff;
+            border-radius:50%; display:flex; align-items:center; justify-content:center;
+            font-weight:700; font-size:.9rem; flex-shrink:0; margin-top:.25rem;
+        }
+        .agenda-item { padding-bottom:1.5rem; border-bottom:1px solid #e9ecef; }
+        .agenda-item:last-child { border-bottom:none; padding-bottom:0; }
+        .agenda-speaker-avatar {
+            width:28px; height:28px; background:#0d6efd; color:#fff;
+            font-size:.7rem; font-weight:700; border-radius:50%;
+            display:flex; align-items:center; justify-content:center; flex-shrink:0;
+        }
+
+        /* SPEAKERS */
+        .speaker-card { padding:1.5rem 1rem; border-radius:12px; transition:box-shadow .25s, transform .25s; }
+        .speaker-card:hover { box-shadow:0 8px 30px rgba(0,0,0,.1); transform:translateY(-3px); }
+        .speaker-photo-fallback {
+            width:96px; height:96px;
+            background:linear-gradient(135deg,#0d6efd,#6610f2); color:#fff;
+            font-size:1.5rem; border-radius:50%;
+            display:flex; align-items:center; justify-content:center;
+        }
+
+        /* FOOTER */
+        .site-footer { flex-shrink:0; }
+
+        /* RESPONSIVE */
+        @media(max-width:575.98px){
+            .hero-section { background-attachment:scroll; padding-top:90px; }
+            .countdown-unit { padding:.6rem .75rem; min-width:58px; }
+            .countdown-value { font-size:1.75rem; }
+            .countdown-separator { font-size:1.75rem; padding-bottom:.9rem; }
+            .cta-buttons .btn { width:100%; justify-content:center; }
+            .meta-chip { font-size:.8rem; padding:.3rem .75rem; }
+        }
+        @media(prefers-reduced-motion:reduce){
+            .live-dot,.badge-live,.cta-register,.cta-login,.speaker-card,#mainNav
+            { animation:none; transition:none; }
+            html { scroll-behavior:auto; }
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+<!-- ── HEADER ─────────────────────────────────────────────────────────────── -->
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-broadcast me-2"></i>PharmaWebcast
+            </a>
+            <button class="navbar-toggler border-0" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-1">
+                    <li class="nav-item"><a class="nav-link" href="#about"><i class="bi bi-info-circle me-1"></i>About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#agenda"><i class="bi bi-calendar3 me-1"></i>Agenda</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#speakers"><i class="bi bi-people me-1"></i>Speakers</a></li>
+                    <li class="nav-item ms-lg-1">
+                        <a href="#" class="btn btn-sm btn-outline-light px-3"><i class="bi bi-box-arrow-in-right me-1"></i>Login</a>
+                    </li>
+                    <li class="nav-item ms-lg-1">
+                        <a href="#" class="btn btn-sm btn-primary px-3"><i class="bi bi-pencil-square me-1"></i>Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+<!-- ── MAIN ───────────────────────────────────────────────────────────────── -->
+<main class="flex-grow-1">
+
+    <!-- HERO -->
+    <section class="hero-section text-white" aria-label="Event hero">
+        <div class="hero-overlay" aria-hidden="true"></div>
+        <div class="container hero-content position-relative py-5">
+
+            <!-- Status badge -->
+            <div class="mb-3">
+                <span class="badge-upcoming">
+                    <i class="bi bi-calendar-event me-1"></i>Upcoming
+                </span>
+            </div>
+
+            <!-- Title -->
+            <h1 class="display-4 fw-bold text-white lh-sm mb-3">
+                Advances in Oncology Drug Delivery:<br>
+                A Global Symposium
+            </h1>
+
+            <!-- Sub-headline -->
+            <p class="lead text-white-75 mb-4 mx-auto" style="max-width:660px;">
+                Join leading oncologists, researchers, and pharmaceutical experts for a
+                live interactive webcast on next-generation targeted therapies.
+            </p>
+
+            <!-- Meta chips -->
+            <div class="event-meta d-flex flex-wrap justify-content-center gap-3 mb-5 fs-6">
+                <span class="meta-chip"><i class="bi bi-calendar3 me-2"></i>Thursday, August 14, 2025</span>
+                <span class="meta-chip"><i class="bi bi-clock me-2"></i>2:00 PM UTC</span>
+                <span class="meta-chip"><i class="bi bi-broadcast me-2"></i>Live Webcast</span>
+            </div>
+
+            <!-- Countdown -->
+            <div class="countdown-wrapper mb-5" id="countdownTimer" role="timer" aria-live="polite">
+                <p class="text-white-50 text-uppercase small letter-spacing-1 mb-3">Event starts in</p>
+                <div class="countdown-grid d-inline-flex gap-2 gap-md-3">
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="cd-days">00</div>
+                        <div class="countdown-label">Days</div>
+                    </div>
+                    <div class="countdown-separator" aria-hidden="true">:</div>
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="cd-hours">00</div>
+                        <div class="countdown-label">Hours</div>
+                    </div>
+                    <div class="countdown-separator" aria-hidden="true">:</div>
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="cd-minutes">00</div>
+                        <div class="countdown-label">Min</div>
+                    </div>
+                    <div class="countdown-separator" aria-hidden="true">:</div>
+                    <div class="countdown-unit">
+                        <div class="countdown-value" id="cd-seconds">00</div>
+                        <div class="countdown-label">Sec</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="cta-buttons d-flex flex-wrap justify-content-center gap-3">
+                <a href="#" class="btn btn-primary btn-lg px-5 shadow cta-register">
+                    <i class="bi bi-pencil-square me-2"></i>Register Now
+                </a>
+                <a href="#" class="btn btn-outline-light btn-lg px-5 cta-login">
+                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section id="about" class="py-5 bg-white">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="section-title mb-2">About This Event</h2>
+                    <div class="section-divider mx-auto mb-5"></div>
+                    <p class="text-muted lh-lg">
+                        This symposium brings together global experts to discuss the latest breakthroughs
+                        in oncology drug delivery, including liposomal formulations, antibody-drug conjugates,
+                        and nanoparticle-based targeting systems. Earn CME credits and engage live with speakers
+                        through our Q&amp;A and polling features.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- AGENDA -->
+    <section id="agenda" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-2">Agenda</h2>
+            <div class="section-divider mx-auto mb-5"></div>
+            <div class="row justify-content-center">
+                <div class="col-lg-9">
+                    <div class="agenda-list">
+
+                        <div class="agenda-item d-flex gap-3 gap-md-4 mb-4">
+                            <div class="agenda-number">1</div>
+                            <div class="flex-grow-1">
+                                <div class="text-primary small fw-semibold mb-1"><i class="bi bi-clock me-1"></i>2:00 PM – 2:15 PM</div>
+                                <h5 class="fw-semibold mb-1">Opening Remarks &amp; Welcome</h5>
+                                <p class="text-muted small mb-1">Introduction to the symposium objectives and housekeeping notes.</p>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <div class="agenda-speaker-avatar">SC</div>
+                                    <small class="text-muted">Dr. Sarah Chen &middot; Chief Medical Officer</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="agenda-item d-flex gap-3 gap-md-4 mb-4">
+                            <div class="agenda-number">2</div>
+                            <div class="flex-grow-1">
+                                <div class="text-primary small fw-semibold mb-1"><i class="bi bi-clock me-1"></i>2:15 PM – 3:00 PM</div>
+                                <h5 class="fw-semibold mb-1">Keynote: Next-Generation ADCs in Solid Tumours</h5>
+                                <p class="text-muted small mb-1">Deep-dive into the clinical pipeline of antibody-drug conjugates with Phase III data.</p>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <div class="agenda-speaker-avatar">MR</div>
+                                    <small class="text-muted">Prof. Marcus Reid &middot; Head of Oncology Research, BioNexus</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="agenda-item d-flex gap-3 gap-md-4 mb-4">
+                            <div class="agenda-number">3</div>
+                            <div class="flex-grow-1">
+                                <div class="text-primary small fw-semibold mb-1"><i class="bi bi-clock me-1"></i>3:00 PM – 3:40 PM</div>
+                                <h5 class="fw-semibold mb-1">Panel: Regulatory Pathways for Novel Delivery Systems</h5>
+                                <p class="text-muted small mb-1">Moderated panel discussion on FDA/EMA approval strategies for nanoparticle formulations.</p>
+                                <div class="d-flex align-items-center gap-2 mt-1">
+                                    <div class="agenda-speaker-avatar">AL</div>
+                                    <small class="text-muted">Dr. Aisha Larson &middot; Regulatory Affairs Lead</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="agenda-item d-flex gap-3 gap-md-4">
+                            <div class="agenda-number">4</div>
+                            <div class="flex-grow-1">
+                                <div class="text-primary small fw-semibold mb-1"><i class="bi bi-clock me-1"></i>3:40 PM – 4:00 PM</div>
+                                <h5 class="fw-semibold mb-1">Live Q&amp;A &amp; Closing</h5>
+                                <p class="text-muted small mb-0">Open floor questions, poll results reveal, and CME credit instructions.</p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SPEAKERS -->
+    <section id="speakers" class="py-5 bg-white">
+        <div class="container">
+            <h2 class="section-title text-center mb-2">Speakers</h2>
+            <div class="section-divider mx-auto mb-5"></div>
+            <div class="row g-4 justify-content-center">
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="speaker-card text-center">
+                        <div class="speaker-photo-fallback mx-auto mb-3">SC</div>
+                        <h6 class="fw-semibold mb-0">Dr. Sarah Chen</h6>
+                        <span class="badge bg-primary-subtle text-primary small mt-1">Keynote</span>
+                        <p class="text-muted small mt-1 mb-1">Chief Medical Officer</p>
+                        <p class="text-muted small mb-2">PharmaVista Inc.</p>
+                        <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="speaker-card text-center">
+                        <div class="speaker-photo-fallback mx-auto mb-3" style="background:linear-gradient(135deg,#198754,#20c997)">MR</div>
+                        <h6 class="fw-semibold mb-0">Prof. Marcus Reid</h6>
+                        <span class="badge bg-success-subtle text-success small mt-1">Panellist</span>
+                        <p class="text-muted small mt-1 mb-1">Head of Oncology Research</p>
+                        <p class="text-muted small mb-2">BioNexus Therapeutics</p>
+                        <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+
+                <div class="col-6 col-md-4 col-lg-3">
+                    <div class="speaker-card text-center">
+                        <div class="speaker-photo-fallback mx-auto mb-3" style="background:linear-gradient(135deg,#dc3545,#fd7e14)">AL</div>
+                        <h6 class="fw-semibold mb-0">Dr. Aisha Larson</h6>
+                        <span class="badge bg-warning-subtle text-warning small mt-1">Moderator</span>
+                        <p class="text-muted small mt-1 mb-1">Regulatory Affairs Lead</p>
+                        <p class="text-muted small mb-2">Global MedReg Advisory</p>
+                        <a href="#" class="btn btn-sm btn-outline-secondary"><i class="bi bi-linkedin"></i></a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- BOTTOM CTA -->
+    <section class="py-5 bg-primary text-white text-center">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-7">
+                    <h3 class="fw-bold mb-2">Don't miss this event.</h3>
+                    <p class="mb-4 text-white-75">Secure your spot — registration is free.</p>
+                    <a href="#" class="btn btn-light btn-lg px-5 text-primary fw-semibold">
+                        <i class="bi bi-pencil-square me-2"></i>Register Now
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer class="site-footer bg-dark text-white-50 py-4">
+    <div class="container">
+        <div class="row gy-3 align-items-center">
+            <div class="col-md-6 text-center text-md-start">
+                <p class="mb-0 small">&copy; 2025 PharmaWebcast. All rights reserved.</p>
+            </div>
+            <div class="col-md-6 text-center text-md-end">
+                <ul class="list-inline mb-0 small">
+                    <li class="list-inline-item"><a href="#" class="text-white-50 text-decoration-none">Privacy Policy</a></li>
+                    <li class="list-inline-item ms-2"><a href="#" class="text-white-50 text-decoration-none">Terms of Use</a></li>
+                    <li class="list-inline-item ms-2"><a href="#" class="text-white-50 text-decoration-none">Support</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" defer></script>
+
+<script>
+    // Countdown seed — in production this is set by PHP: window.COUNTDOWN_SECONDS = <?= $countdown ?>
+    // Demo: count down from 6 days, 14 hours, 22 minutes
+    window.COUNTDOWN_SECONDS = (6 * 86400) + (14 * 3600) + (22 * 60) + 45;
+</script>
+
+<script>
+(function () {
+    'use strict';
+    const timerEl   = document.getElementById('countdownTimer');
+    const daysEl    = document.getElementById('cd-days');
+    const hoursEl   = document.getElementById('cd-hours');
+    const minutesEl = document.getElementById('cd-minutes');
+    const secondsEl = document.getElementById('cd-seconds');
+    if (!timerEl) return;
+
+    let remaining = parseInt(window.COUNTDOWN_SECONDS ?? 0, 10);
+
+    function pad(n) { return String(Math.max(0, n)).padStart(2, '0'); }
+
+    function decompose(t) {
+        return {
+            days:    Math.floor(t / 86400),
+            hours:   Math.floor((t % 86400) / 3600),
+            minutes: Math.floor((t % 3600) / 60),
+            seconds: t % 60,
+        };
+    }
+
+    function render() {
+        if (document.hidden) return;
+        const { days, hours, minutes, seconds } = decompose(remaining);
+        daysEl.textContent    = pad(days);
+        hoursEl.textContent   = pad(hours);
+        minutesEl.textContent = pad(minutes);
+        secondsEl.textContent = pad(seconds);
+    }
+
+    function tick() {
+        remaining -= 1;
+        if (remaining <= 0) { clearInterval(id); return; }
+        render();
+    }
+
+    // Navbar scroll effect
+    const nav = document.getElementById('mainNav');
+    window.addEventListener('scroll', function () {
+        nav.classList.toggle('scrolled', window.scrollY > 60);
+    }, { passive: true });
+
+    // Smooth scroll
+    document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        a.addEventListener('click', function (e) {
+            const t = document.querySelector(this.getAttribute('href'));
+            if (!t) return;
+            e.preventDefault();
+            const top = t.getBoundingClientRect().top + window.scrollY - (nav?.offsetHeight ?? 72) - 16;
+            window.scrollTo({ top, behavior: 'smooth' });
+        });
+    });
+
+    render();
+    const id = setInterval(tick, 1000);
+})();
+</script>
+
+</body>
+</html>

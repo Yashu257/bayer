@@ -1,0 +1,418 @@
+/*
+ * landing.css — Event Landing Page styles
+ * Loaded only on /e/{slug} pages.
+ * Bootstrap 5 handles grid/utilities; this file adds page-specific rules only.
+ */
+
+/* ==========================================================================
+   CSS CUSTOM PROPERTIES
+   ========================================================================== */
+:root {
+    --hero-min-height:      100vh;
+    --hero-overlay-opacity: 0.60;
+    --countdown-bg:         rgba(255, 255, 255, 0.12);
+    --countdown-border:     rgba(255, 255, 255, 0.20);
+    --countdown-radius:     12px;
+    --section-divider-w:    60px;
+    --section-divider-h:    4px;
+    --speaker-photo-size:   96px;
+    --agenda-number-size:   40px;
+    --live-dot-size:        10px;
+    --transition-base:      0.25s ease;
+}
+
+/* ==========================================================================
+   RESET / BASE
+   ========================================================================== */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body.landing-page {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ==========================================================================
+   NAVIGATION — transparent over hero, solid on scroll
+   ========================================================================== */
+#mainNav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1030;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: transparent;
+    transition: background-color var(--transition-base),
+                padding var(--transition-base),
+                box-shadow var(--transition-base);
+}
+
+#mainNav.scrolled {
+    background-color: rgba(15, 23, 42, 0.95);
+    padding-top: 0.6rem;
+    padding-bottom: 0.6rem;
+    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.25);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+}
+
+/* ==========================================================================
+   HERO SECTION
+   ========================================================================== */
+.hero-section {
+    position: relative;
+    min-height: var(--hero-min-height);
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    padding-top: 100px; /* clear fixed nav */
+    padding-bottom: 80px;
+}
+
+/* Dark gradient overlay */
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        160deg,
+        rgba(5, 10, 30, 0.75) 0%,
+        rgba(10, 20, 50, var(--hero-overlay-opacity)) 100%
+    );
+    z-index: 0;
+}
+
+.hero-content {
+    z-index: 1;
+}
+
+/* Event title */
+.hero-content h1 {
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.50);
+    letter-spacing: -0.5px;
+}
+
+/* Lead paragraph */
+.hero-content .lead {
+    font-size: 1.125rem;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.40);
+}
+
+/* white-75 utility (Bootstrap doesn't ship this) */
+.text-white-75 {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* ==========================================================================
+   STATUS BADGES
+   ========================================================================== */
+.badge-live {
+    background-color: #dc3545;
+    color: #fff;
+    border-radius: 50px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    animation: badge-pulse 2s infinite;
+}
+
+.badge-upcoming {
+    background-color: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.30);
+    border-radius: 50px;
+}
+
+/* Pulsing red dot beside LIVE badge */
+.live-dot {
+    display: inline-block;
+    width: var(--live-dot-size);
+    height: var(--live-dot-size);
+    background: #fff;
+    border-radius: 50%;
+    vertical-align: middle;
+    animation: live-dot-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes live-dot-pulse {
+    0%, 100% { opacity: 1;   transform: scale(1); }
+    50%       { opacity: 0.3; transform: scale(0.7); }
+}
+
+@keyframes badge-pulse {
+    0%, 100% { box-shadow: 0 0 0 0   rgba(220, 53, 69, 0.60); }
+    50%       { box-shadow: 0 0 0 8px rgba(220, 53, 69, 0); }
+}
+
+/* ==========================================================================
+   EVENT META CHIPS (date / time / type)
+   ========================================================================== */
+.meta-chip {
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.20);
+    color: rgba(255, 255, 255, 0.90);
+    border-radius: 50px;
+    padding: 0.35rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    backdrop-filter: blur(4px);
+}
+
+/* ==========================================================================
+   COUNTDOWN TIMER
+   ========================================================================== */
+.countdown-wrapper {
+    display: inline-block;
+}
+
+.countdown-grid {
+    align-items: center;
+}
+
+.countdown-unit {
+    background: var(--countdown-bg);
+    border: 1px solid var(--countdown-border);
+    border-radius: var(--countdown-radius);
+    padding: 0.75rem 1.25rem;
+    min-width: 72px;
+    text-align: center;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    transition: background-color var(--transition-base);
+}
+
+.countdown-value {
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    font-weight: 800;
+    color: #ffffff;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -1px;
+}
+
+.countdown-label {
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: rgba(255, 255, 255, 0.60);
+    margin-top: 0.3rem;
+    font-weight: 500;
+}
+
+.countdown-separator {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: rgba(255, 255, 255, 0.40);
+    line-height: 1;
+    align-self: center;
+    padding-bottom: 1.2rem; /* visually align with digits */
+    user-select: none;
+}
+
+/* Countdown finished state */
+.countdown-finished .countdown-value {
+    color: #ffd700;
+}
+
+/* ==========================================================================
+   CTA BUTTONS
+   ========================================================================== */
+.cta-register,
+.cta-login {
+    transition: transform var(--transition-base),
+                box-shadow var(--transition-base);
+}
+
+.cta-register:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.45);
+}
+
+.cta-login:hover {
+    transform: translateY(-2px);
+}
+
+/* ==========================================================================
+   SECTION COMMON
+   ========================================================================== */
+.section-title {
+    font-size: clamp(1.6rem, 3vw, 2.25rem);
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: -0.3px;
+}
+
+.section-divider {
+    width: var(--section-divider-w);
+    height: var(--section-divider-h);
+    background: linear-gradient(90deg, #0d6efd, #6610f2);
+    border-radius: 99px;
+}
+
+.letter-spacing-1 {
+    letter-spacing: 1px;
+}
+
+/* ==========================================================================
+   AGENDA
+   ========================================================================== */
+.agenda-number {
+    width: var(--agenda-number-size);
+    height: var(--agenda-number-size);
+    min-width: var(--agenda-number-size);
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.agenda-item {
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.agenda-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.agenda-speaker-avatar {
+    width: 28px;
+    height: 28px;
+    background: #0d6efd;
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+/* ==========================================================================
+   SPEAKERS
+   ========================================================================== */
+.speaker-card {
+    padding: 1.5rem 1rem;
+    border-radius: 12px;
+    transition: box-shadow var(--transition-base),
+                transform var(--transition-base);
+}
+
+.speaker-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.10);
+    transform: translateY(-3px);
+}
+
+.speaker-photo {
+    width: var(--speaker-photo-size);
+    height: var(--speaker-photo-size);
+    object-fit: cover;
+    border: 3px solid #e9ecef;
+}
+
+.speaker-photo-fallback {
+    width: var(--speaker-photo-size);
+    height: var(--speaker-photo-size);
+    background: linear-gradient(135deg, #0d6efd, #6610f2);
+    color: #fff;
+    font-size: 1.5rem;
+}
+
+/* ==========================================================================
+   SPONSORS
+   ========================================================================== */
+.sponsor-link {
+    opacity: 0.65;
+    transition: opacity var(--transition-base);
+}
+
+.sponsor-link:hover {
+    opacity: 1;
+}
+
+.sponsor-logo {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+}
+
+/* ==========================================================================
+   RESPONSIVE
+   ========================================================================== */
+@media (max-width: 575.98px) {
+    .hero-section {
+        background-attachment: scroll; /* parallax can cause jank on mobile */
+        padding-top: 90px;
+    }
+
+    .countdown-unit {
+        padding: 0.6rem 0.75rem;
+        min-width: 58px;
+    }
+
+    .countdown-value {
+        font-size: 1.75rem;
+    }
+
+    .countdown-separator {
+        font-size: 1.75rem;
+        padding-bottom: 0.9rem;
+    }
+
+    .cta-buttons .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .meta-chip {
+        font-size: 0.8rem;
+        padding: 0.3rem 0.75rem;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .speaker-card {
+        padding: 1rem 0.5rem;
+    }
+
+    var(--speaker-photo-size) {
+        --speaker-photo-size: 72px;
+    }
+}
+
+/* ==========================================================================
+   UTILITY — reduced motion
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+    .live-dot,
+    .badge-live,
+    .cta-register,
+    .cta-login,
+    .speaker-card,
+    #mainNav {
+        animation: none;
+        transition: none;
+    }
+
+    html {
+        scroll-behavior: auto;
+    }
+}
