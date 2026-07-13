@@ -4,6 +4,7 @@ services:
     name: pharma-webcast
     env: php
     plan: starter
+    rootDir: .
     buildCommand: ""
     startCommand: ""
     envVars:
