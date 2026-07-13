@@ -1,12 +1,11 @@
-
 services:
   - type: web
-    name: pharma-webcast
+    name: pharma-webcast-backend
     env: php
     plan: starter
-    rootDir: .
-    buildCommand: ""
-    startCommand: ""
+    rootDir: backend
+    buildCommand: "composer install --no-dev --optimize-autoloader"
+    startCommand: "php -S 0.0.0.0:$PORT -t ../frontend ../frontend/router.php"
     envVars:
       - key: APP_ENV
         value: production
@@ -34,7 +33,7 @@ services:
           property: password
     disk:
       name: storage
-      mountPath: /opt/render/project/src/storage
+      mountPath: /opt/render/project/src/backend/storage
       sizeGB: 1
 
 databases:

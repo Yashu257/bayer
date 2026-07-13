@@ -1,5 +1,19 @@
-
 {
   "version": 2,
-  "note": "Vercel does not officially support PHP. Use Render for PHP deployment instead."
+  "name": "pharma-webcast-frontend",
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "BACKEND_API_URL": "https://your-backend-app.onrender.com"
+  }
 }

@@ -1,29 +1,36 @@
-
-# Environment variables
+# Environment
+backend/.env
 .env
 
+# Dependencies
+backend/vendor/
+node_modules/
+
 # Storage
-/storage/cache/*
-/storage/logs/*
-/storage/sessions/*
-/storage/temp/*
-!/storage/cache/.gitkeep
-!/storage/logs/.gitkeep
-!/storage/sessions/.gitkeep
-!/storage/temp/.gitkeep
+backend/storage/logs/*
+backend/storage/cache/*
+backend/storage/sessions/*
+backend/storage/temp/*
+!backend/storage/logs/.gitkeep
+!backend/storage/cache/.gitkeep
+!backend/storage/sessions/.gitkeep
+!backend/storage/temp/.gitkeep
 
 # Uploads
-/public/uploads/*
-!/public/uploads/documents/.gitkeep
-!/public/uploads/selfies/.gitkeep
-!/public/uploads/speakers/.gitkeep
-!/public/uploads/thumbnails/.gitkeep
-!/public/uploads/webcasts/.gitkeep
+frontend/uploads/*
+!frontend/uploads/.gitkeep
 
 # IDE
-.vscode/
 .idea/
+.vscode/
+*.swp
+*.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
+
+# Build
+dist/
+build/
