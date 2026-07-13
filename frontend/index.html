@@ -1116,12 +1116,12 @@ function handleLogin() {
     localStorage.setItem('pw_user_email', email.toLowerCase());
     localStorage.setItem('pw_heartbeat', Date.now().toString());
 
-    // Persist the attendee to the database (users table)
-    fetch('/api/save-user.php', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: name, email: email })
-    }).catch(function(err){ console.error('save-user failed:', err); });
+    // TODO: Connect to backend when Render is deployed
+    // fetch('https://YOUR-RENDER-BACKEND.onrender.com/api/save-user.php', {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify({ name: name, email: email })
+    // }).catch(function(err){ console.error('save-user failed:', err); });
 
     showPage('webcast');
   }, 600);
