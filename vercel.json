@@ -1,8 +1,19 @@
 {
   "version": 2,
-  "rewrites": [
-    { "source": "/", "destination": "/frontend/preview.html" },
-    { "source": "/admin", "destination": "/frontend/preview.admin" },
-    { "source": "/(.*)", "destination": "/frontend/$1" }
-  ]
+  "name": "pharma-webcast-frontend",
+  "builds": [
+    {
+      "src": "frontend/**",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "BACKEND_API_URL": "https://your-backend-app.onrender.com"
+  }
 }
